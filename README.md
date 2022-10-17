@@ -1,4 +1,4 @@
-# 复旦大学高级软件工程作业
+# 复旦大学高级软件工程作业lab1
 #### vscode extention 使用typescript开发 lab
 #### lab说明见lab.pdf
 #### 安装运行需要下载安装npm相关依赖包
