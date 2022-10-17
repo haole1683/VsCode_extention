@@ -1,0 +1,172 @@
+{
+  "name": "case2script",
+  "displayName": "case2script",
+  "description": "convert text case to script case",
+  "version": "0.0.1",
+  "publisher": "twsong",
+  "engines": {
+    "vscode": "^1.72.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:TreeViewTest",
+    "onCommand:case2script.helloWorld",
+    "onCommand:case2script.askQuestion",
+    "onCommand:TreeViewTest_One.opendir",
+    "onCommand:case2script.addTitle",
+    "onCommand:case2script.deleteTitle",
+    "onCommand:case2script.addBookmark",
+    "onCommand:case2script.deleteBookmark",
+    "onCommand:case2script.open",
+    "onCommand:case2script.bookmark",
+    "onCommand:case2script.edit",
+    "onCommand:case2script.save",
+    "onCommand:case2script.undo",
+    "onCommand:case2script.redo",
+    "onCommand:case2script.showTree",
+    "onCommand:case2script.lsTree",
+    "onCommand:case2script.readBookmark"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "TreeViewTest",
+          "title": "我的目录树",
+          "icon": "media/books.svg"
+        }
+      ]
+    },
+    
+    "views": {
+			"TreeViewTest": [
+				{
+					"id": "TreeViewTest_One",
+					"name": "树视图测试1"
+				},
+        {
+          "id":"TreeViewTest_TWO",
+          "name":"树视图测试2"
+        }
+			]
+    },
+    "commands": [
+      {
+        "command": "case2script.helloWorld",
+        "title": "Hello World"
+      },
+      {
+        "command": "case2script.askQuestion",
+        "title": "Ask Question"
+      },
+      {
+        "command": "TreeViewTest_One.opendir",
+        "title":"打开文件夹",
+        "icon":"media/open.svg"
+      },
+      {
+        "command": "case2script.addTitle",
+        "title":"addTitle"
+      },
+      {
+        "command": "case2script.deleteTitle",
+        "title": "deleteTitle"
+      },
+      {
+        "command": "case2script.addBookmark",
+        "title": "addBookmark"
+      },
+      {
+        "command": "case2script.deleteBookmark",
+        "title": "deleteBookmark"
+      },
+      {
+        "command": "case2script.open",
+        "title": "open"
+      },
+      {
+        "command": "case2script.bookmark",
+        "title": "bookmark"
+      },
+      {
+        "command": "case2script.edit",
+        "title": "edit"
+      },
+      {
+        "command": "case2script.save",
+        "title": "save"
+      },
+      {
+        "command": "case2script.undo",
+        "title": "undo"
+      },
+      {
+        "command": "case2script.redo",
+        "title": "redo"
+      },
+      {
+        "command": "case2script.showTree",
+        "title": "showTree"
+      },
+      {
+        "command": "case2script.lsTree",
+        "title": "lsTree"
+      },
+      {
+        "command": "case2script.readBookmark",
+        "title": "readBookmark"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "case2script.helloWorld",
+        "key": "ctrl+m",
+        "mac": "cmd+m",
+        "when": "editorFocus"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "case2script.askQuestion",
+          "group": "group1"
+        }
+      ],
+      "view/title": [{
+        "command": "TreeViewTest_One.opendir",
+        "when": "view == TreeViewTest_One",
+        "group": "navigation"
+      }]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.72.0",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
+    "@vscode/test-electron": "^2.1.5",
+    "eslint": "^8.24.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.0.0",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "axios": "^1.1.2",
+    "fs-extra": "^10.1.0",
+    "path": "^0.12.7"
+  }
+}
