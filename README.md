@@ -10,4 +10,6 @@
 
 
 ## 演示demo
-<iframe height=500 width=500 src="demo\demo.gif"></iframe>
+
+
+![demo.gif](https://s2.ax1x.com/2019/03/03/kq2ghD.gif)
