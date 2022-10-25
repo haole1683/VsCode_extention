@@ -31,10 +31,7 @@ Node具体描述树的结点。我们定义了以下四种属性：
 | 属性名 | 数据类型 | 描述 |
 | --- | --- | --- |
 | name | string | 目录（书签）的名称 |
-| type | enum NodeType {
-leaf,
-branch
-} | 结点的类型，值为leaf代表叶子结点，即书签，值为branch代表分支结点，即目录 |
+| type | enum NodeType {leaf,branch} | 结点的类型，值为leaf代表叶子结点，即书签，值为branch代表分支结点，即目录 |
 | sons | Array<Node> | 当前结点的儿子结点 |
 | content | string | 结点的内容，即书签的url信息 |
 
