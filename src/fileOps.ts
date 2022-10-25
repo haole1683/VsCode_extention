@@ -149,9 +149,9 @@ class FileOperation{
 
 
 // function test(){
-//     let myops = new FileOperation;
-//     let mystr:string = "asdfjsafsao";
-//     myops.writeContent(mystr);
+//     let myops = new FileOperation("files/tmp.bmk");
+//     // let mystr:string = "asdfjsafsao";
+//     // myops.writeContent(mystr);
     
 //     let readStr:string = myops.readContent();
 //     myops.writeContentAppend("\nhello");
