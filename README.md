@@ -12,4 +12,4 @@
 ## 演示demo
 
 
-![demo.gif](https://s2.ax1x.com/2019/03/03/kq2ghD.gif)
+![demo.gif](https://github.com/haole1683/VsCode_extention/blob/main/demo/demo.gif)
