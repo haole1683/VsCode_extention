@@ -7,11 +7,12 @@
 
 #### TODO
 
-#### 1.测试还没写
+#### 1.测试还没写 (done)
 #### 2.文档待完善
 #### 3.加入设计模式Observer，用于更新内存中树和vscode侧边栏显示
 #### 4.prezatation?
 #### 5.页面显示有bug，部分网页无法显示
+#### 6.addBookmark deleteBookmark之间的undo,redo存在问题
 
 
 ## 二、演示demo，没弄完
@@ -255,3 +256,9 @@ class CommandPool {
 }
 ```
 
+
+
+## 四、自动化单元测试
+单元测试采用Mocha进行，对每条命令进行单元化测试
+Mocha Link:
+https://mochajs.org/

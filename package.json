@@ -40,18 +40,17 @@
         }
       ]
     },
-    
     "views": {
-			"TreeViewTest": [
-				{
-					"id": "TreeViewTest_One",
-					"name": "树视图测试1"
-				},
+      "TreeViewTest": [
         {
-          "id":"TreeViewTest_TWO",
-          "name":"树视图测试2"
+          "id": "TreeViewTest_One",
+          "name": "树视图测试1"
+        },
+        {
+          "id": "TreeViewTest_TWO",
+          "name": "树视图测试2"
         }
-			]
+      ]
     },
     "commands": [
       {
@@ -64,12 +63,12 @@
       },
       {
         "command": "TreeViewTest_One.opendir",
-        "title":"打开文件夹",
-        "icon":"media/open.svg"
+        "title": "打开文件夹",
+        "icon": "media/open.svg"
       },
       {
         "command": "case2script.addTitle",
-        "title":"addTitle"
+        "title": "addTitle"
       },
       {
         "command": "case2script.deleteTitle",
@@ -135,11 +134,13 @@
           "group": "group1"
         }
       ],
-      "view/title": [{
-        "command": "TreeViewTest_One.opendir",
-        "when": "view == TreeViewTest_One",
-        "group": "navigation"
-      }]
+      "view/title": [
+        {
+          "command": "TreeViewTest_One.opendir",
+          "when": "view == TreeViewTest_One",
+          "group": "navigation"
+        }
+      ]
     }
   },
   "scripts": {
@@ -161,7 +162,7 @@
     "@vscode/test-electron": "^2.1.5",
     "eslint": "^8.24.0",
     "glob": "^8.0.3",
-    "mocha": "^10.0.0",
+    "mocha": "^10.1.0",
     "typescript": "^4.8.4"
   },
   "dependencies": {

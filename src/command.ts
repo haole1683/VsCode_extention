@@ -19,7 +19,6 @@ class Invoker {
     }
 
     public call() {
-        console.log("调用者执行命令command...");
         this.command.execute();
     }
 }
@@ -49,7 +48,6 @@ class AddTitleCommand implements Command {
         // Perform delete logic
 
         // log logic
-        console.log("Add execute");
         if (this.title.includes("at")) {
             let devided = this.title.split("at");
             let name = devided[0];
@@ -145,11 +143,9 @@ class ReadBookmarkCommand implements Command {
 //接收者
 class Receiver {
     constructor() {
-        console.log("new Receiver constructed");
     };
     myCmd: TargetCmd = new AdapterFromCmdToTree(new Tree());
     public action() {
-        console.log("接收者的action()方法被调用...");
     }
 
     public init() {
@@ -189,17 +185,14 @@ class Receiver {
      * The Cmds receiver receives
      */
     public addTitle(title: string, folder?: string) {
-        console.log("接收者的addTitle()方法被调用...");
         this.myCmd.addTitle(title, folder);
     }
 
     public deleteTitle(title: string) {
-        console.log("接收者的deleteTitle()方法被调用...");
         this.myCmd.deleteTitle(title);
     }
 
     public addBookmark(args: string) {
-        console.log("addBookmark方法被调用");
         let devide = args.split("at");
         let folder: string = devide[1];
         let bmkPart: string = devide[0];
@@ -210,33 +203,28 @@ class Receiver {
     }
 
     public deleteBookmark(args: string) {
-        console.log("deleteBookmark方法被调用");
+
         this.myCmd.deleteBookmark(args);
     }
 
     public open(filePath: string) {
-        console.log("open()方法被调用...");
         console.log("Path is", filePath);
         this.myCmd.openNewFile(filePath);
     }
 
     public save() {
-        console.log("save()方法被调用...");
         this.myCmd.saveTree();
     }
 
     public showTree() {
-        console.log("showTree()方法被调用...");
         this.myCmd.showTree();
     }
 
     public lsTree() {
-        console.log("lsTree()方法被调用...");
         this.myCmd.lsTree();
     }
 
     public readBookmark(title: string) {
-        console.log("readBookmark()方法被调用...");
         this.myCmd.readBookmark(title);
     }
 
@@ -255,7 +243,6 @@ class CommandPool {
     redoStack: Array<string> = [];
     undoStack: Array<string> = [];
     constructor() {
-        console.log("new CmdPool constructed");
         this.receiver = new Receiver();
         this.redoStack = new Array<string>;
         this.undoStack = new Array<string>;
@@ -269,7 +256,6 @@ class CommandPool {
     }
     public sendCommand(thecmd: string, args: string): void {
 
-        console.log("\n\n\n\n\n\n");
         // 创建具体命令对象cmd并设定它的接受者
         let cmd: Command = new ConcreteCommand(this.receiver);
         switch (thecmd) {
@@ -324,10 +310,7 @@ class CommandPool {
 
         // 请求绑定命令
         const ir = new Invoker(cmd);
-        console.log("客户访问调用者的call()方法...");
         ir.call();
-        console.log(this.undoStack);
-        console.log(this.redoStack);
     };
 
     undo(): void {

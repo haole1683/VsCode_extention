@@ -13,6 +13,7 @@ export function run(): Promise<void> {
 
 	return new Promise((c, e) => {
 		glob('**/**.test.js', { cwd: testsRoot }, (err, files) => {
+			console.log("You are running test of",files);
 			if (err) {
 				return e(err);
 			}
