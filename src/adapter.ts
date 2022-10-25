@@ -129,7 +129,6 @@ class AdapterFromCmdToTree implements TargetCmd {
         this.adaptee.loadTreeFromFile(filePath);
     }
     showTree(): void {
-        
         this.adaptee.printTree();
     }
     addTitle(title: string, folder?: string): void {
