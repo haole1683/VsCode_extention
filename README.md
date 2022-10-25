@@ -10,7 +10,7 @@
 #### 文档——doc文件夹下
 
 
-## 二、演示demo
+## 二、演示demo，没弄完
 
 
 ![demo.gif](https://github.com/haole1683/VsCode_extention/blob/main/demo/demo.gif)
@@ -55,10 +55,10 @@ branch
 ### ⾯向对象 
 ## 待阅读 
 [Category Theory](http://www.appliedcategorytheory.org/what-is-applied-category-theory/)  
-:::
+```
 其树形结构如下：
 ![](https://cdn.nlark.com/yuque/0/2022/jpeg/1743388/1666334486582-578b1a6a-f8ec-4c0f-9085-5b5404cd2085.jpeg)
-```
+
 2. 设计模式使用
 
 2.1 Adapter模式
