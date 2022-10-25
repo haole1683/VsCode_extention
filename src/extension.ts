@@ -5,7 +5,6 @@ import axios from 'axios';
 import * as  fs from "fs";
 import { MyTreeData } from './myTreeData';
 import { CommandPool } from './command';
-// import {}
 
 
 // this method is called when your extension is activated
@@ -124,7 +123,7 @@ export async function activate(context: vscode.ExtensionContext) {
         if (url !== null) {
             const panel = vscode.window.createWebviewPanel(
                 'webPage',
-                "Test",
+                label,
                 vscode.ViewColumn.One,
                 {
                     enableScripts: true,

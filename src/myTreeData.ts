@@ -125,7 +125,7 @@ export class MyTreeItem extends TreeItem{
         public readonly parentPath: string,   //存储当前标签的路径，不包含该标签这个目录
         public readonly collapsibleState: TreeItemCollapsibleState,
         public level:number,
-        public url:string | null
+        public url:string | null,
     ){
         super(label, collapsibleState);
     }
