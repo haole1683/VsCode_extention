@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import axios from 'axios';
 import * as  fs from "fs";
 import { MyTreeData } from './myTreeData';
-import { CommandPool } from './command';
+import { CommandPool } from './origin_command';
 
 
 // this method is called when your extension is activated

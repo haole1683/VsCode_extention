@@ -1,37 +1,52 @@
-import { Bookmark, Catagory, Node } from "./node";
+import { Bookmark, Catagory, File, Folder, Node } from "./node";
 import { Tree, BookmarkTree, FileTree } from "./tree";
 
-class FactoryProducer {
-    public getFactory(choice: string): AbstractFactory | undefined {
-        if (choice === "Bookmark") { return new BookmarkTreeFactory; }
-        else if (choice === "File") { return new FileTreeFactory; }
-        else {return undefined;}
-    }
-}
-
 interface AbstractFactory {
-    getTree(): Tree;
-    getNode(node: string): Node | undefined;
+    getTree(path?:string): Tree;
+    getNode(nodeType: string, name: string): Node;
+}
+class FactoryProducer {
+    public getBookmarkFactory() {return new BookmarkTreeFactory;}
+    public getFileFactory() { return new FileTreeFactory;    }
 }
 
 class BookmarkTreeFactory implements AbstractFactory {
-    getTree(): Tree {
-        return new BookmarkTree;
+    getTree(): BookmarkTree {
+        return new BookmarkTree();
     }
-    getNode(node: string): Node | undefined {
-        if (node === "Category") {}
-        else if (node === "Bookmark") {}
-        else {return undefined;}
+    getNode(nodeType: string, name: string): Node {
+        if (nodeType === "Category") { return new Catagory(name); }
+        else if (nodeType === "Bookmark") { return new Bookmark(name, ""); }
+        else { return new Catagory(name); }
     }
 }
 
 class FileTreeFactory implements AbstractFactory {
-    getTree(): Tree {
-        return new FileTree;
+    getTree(path?: string): FileTree {
+        if (path === undefined) {
+            return new FileTree("");
+        } else {
+            return new FileTree(path);
+        }
     }
-    getNode(node: string): Node | undefined {
-        if (node === "Category") {}
-        else if (node === "Bookmark") {}
-        else {return undefined;}
+    getNode(nodeType: string, name: string): Node {
+        if (nodeType === "Folder") { return new Folder(name); }
+        else if (nodeType === "File") { return new File(name); }
+        else { return new Folder(name); }
     }
 }
+
+
+function testFactory(){
+    let factoryproducer = new FactoryProducer();
+    let bookmarkFactory = factoryproducer.getBookmarkFactory();
+    let myTree:BookmarkTree = bookmarkFactory.getTree();
+    let myNode = bookmarkFactory.getNode("Bookmark", "bbb");
+    if(myNode !== undefined){
+        myTree.addNode(myNode);
+        myTree.printTree();
+    }
+    
+}
+
+testFactory();
