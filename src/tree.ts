@@ -24,6 +24,7 @@ class BookmarkTree implements Tree{
     constructor(){
         this.root = new Catagory("个人收藏");
         this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk";
+        this.read(this.path);
     }
 
     // 树基本属性get set
@@ -525,4 +526,4 @@ function testFileTree(){
     myTree.printlsTree();
 }
 
-testFileTree();
+// testFileTree();

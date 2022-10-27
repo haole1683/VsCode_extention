@@ -3,19 +3,19 @@ import { Tree, BookmarkTree, FileTree } from "./tree";
 
 interface Iterators {
     hasNext(): Boolean;
-    next(): Node;
+    next(): [Node, Number];
 }
 
 class TreeIterator implements Iterators {
     private tree: Tree;
     private seq: Array<Node>;
-    private deepth: Array<number>;
+    private depth: Array<number>;
     private index: number;
 
     constructor(tree: Tree, method: string) {
         this.tree = tree;
         this.seq = [];
-        this.deepth = [];
+        this.depth = [];
         this.index = 0;
         if (method === "level") { this.getLevelSequence(); }
         else { this.getPreSequence(); }
@@ -28,7 +28,7 @@ class TreeIterator implements Iterators {
             let curNode = myQueue.shift();
             if (curNode !== undefined) {
                 this.seq.push(curNode);
-                this.deepth.push(0);
+                this.depth.push(0);
             }
             curNode?.getChildren().forEach(function (son) {
                 myQueue.push(son);
@@ -39,7 +39,7 @@ class TreeIterator implements Iterators {
     private preOrder(node: Node, deep: number): void {
         if (node !== this.tree.getRoot()) { 
             this.seq.push(node); 
-            this.deepth.push(deep);
+            this.depth.push(deep);
         }
         node?.getChildren().forEach( (son) => {
             this.preOrder(son, deep + 1);
@@ -56,8 +56,27 @@ class TreeIterator implements Iterators {
     }
 
     public next():[Node, Number] {
-        return [this.seq[this.index], this.deepth[this.index++]];
+        return [this.seq[this.index], this.depth[this.index++]];
     }
-
 }
 
+
+function testIterator(){
+    let myTree = new BookmarkTree();
+    let myLevelIter = new TreeIterator(myTree,"level");
+    while(myLevelIter.hasNext()){
+        let tmpNode = myLevelIter.next()[0];
+        console.log(tmpNode.getStr());
+    }
+    console.log("\n\n\n\n");
+    let myPreIter = new TreeIterator(myTree,"pre");
+    while(myPreIter.hasNext()){
+        let tmpArr = myPreIter.next();
+        let tmpNode = tmpArr[0];
+        let tmpDepth = tmpArr[1];
+        console.log(tmpNode.getStr());
+        console.log(tmpDepth);
+    }
+}
+
+// testIterator();
