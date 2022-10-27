@@ -37,7 +37,7 @@ target.request();
  */
 
 import { FileOperation } from "./fileOps";
-import { Tree } from "./tree";
+import { Tree } from "./origin_tree";
 
 export { TargetTree, AdapterFromTreeToFile };
 
