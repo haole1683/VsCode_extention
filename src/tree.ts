@@ -1,7 +1,6 @@
 import assert = require("assert");
 import { AdapterFromTreeToFile,TargetTree } from "./adapter";
 import { FileOperation } from "./fileOps";
-import { MyTreeData } from "./myTreeData";
 import { Node,Catagory,Bookmark,Folder,File } from "./node";
 export { Tree, BookmarkTree, FileTree };
 
@@ -19,9 +18,10 @@ class BookmarkTree implements Tree{
     private path:string;
 
     constructor(){
-        this.root = new Catagory("base");
+        this.root = new Catagory("个人收藏");
         this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk";
     }
+
     // 树基本属性get set
     public getRoot():Node{
         return this.root;
@@ -267,7 +267,7 @@ class BookmarkTree implements Tree{
             } else { // 目录
                 let folderName: string = str.split(" ")[1];
                 let fatherNode = this.findNode(fatherKey)[0];
-                fatherNode.addChild(new Catagory(folderName));
+                fatherNode?.addChild(new Catagory(folderName));
                 if (level >= record.length) {
                     record.push(folderName);
                 } else {
@@ -285,6 +285,8 @@ class BookmarkTree implements Tree{
         let str: string = this.getFileFormatContent();
         myTree.writeToFile(str);
     }
+
+    // 迭代器
     public getIterator(): Iterable<Node> {
         throw new Error("Method not implemented.");
     }
@@ -325,9 +327,10 @@ class FileTree implements Tree{
     
 }
 
+// 测试
 function testTree(){
     let myTree:BookmarkTree = new BookmarkTree();
-    myTree.read("files\1.bmk");
+    myTree.read("C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk");
     myTree.printTree();
 }
 testTree();
