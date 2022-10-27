@@ -10,22 +10,50 @@ import { Tree } from "./tree";
 
 //调用者
 class Invoker {
-    constructor(private command: Command) {
-        this.command = command;
+    redoStack: Array<Command>;
+    undoStack: Array<Command>;
+    constructor() {
+        this.redoStack = [];
+        this.undoStack = [];
     }
 
-    public setCommand(command: Command) {
-        this.command = command;
+    public call(cmd:Command):void {
+        cmd.execute();
     }
 
-    public call() {
-        this.command.execute();
+    public undo(): void {
+        if (this.undoStack.length === 0) {
+            return;
+        } else {
+            let theLastCmd = this.undoStack.pop();
+            if (theLastCmd === undefined||!theLastCmd?.ifUndo()) {
+                return;
+            }
+            theLastCmd.undo();
+            this.redoStack.push(theLastCmd);
+        }
+    }
+
+    public redo(): void {
+        if (this.redoStack.length === 0) {
+            return;
+        } else {
+            let theLastCmd = this.redoStack.pop();
+            if (theLastCmd === undefined) {
+                return;
+            }
+            theLastCmd.execute();
+        }
     }
 }
+
+
 
 //抽象命令
 interface Command {
     execute(): void;
+    undo():void;
+    ifUndo():boolean;
 }
 
 //具体命令
@@ -33,50 +61,82 @@ class ConcreteCommand implements Command {
     constructor(private receiver: Receiver) {
         this.receiver = receiver;
     }
+    ifUndo(): boolean {
+        return false;
+    }
+    undo(): void {
+        throw new Error("Method not implemented.");
+    }
 
     public execute() {
         this.receiver.action();
     }
 }
 class AddTitleCommand implements Command {
-    constructor(private receiver: Receiver, private title: string) {
+    constructor(private receiver: Receiver, private args: string) {
         this.receiver = receiver;
-        this.title = title;
+        this.args = args;
+    }
+    ifUndo(): boolean {
+        return true;
+    }
+    undo(): void {
+        throw new Error("Method not implemented.");
     }
     public execute() {
         // Check logic
         // Perform delete logic
 
         // log logic
-        if (this.title.includes("at")) {
-            let devided = this.title.split("at");
+        if (this.args.includes("at")) {
+            let devided = this.args.split("at");
             let name = devided[0];
             let folder = devided[1];
             this.receiver.addTitle(name, folder);
         } else {
-            this.receiver.addTitle(this.title);
+            this.receiver.addTitle(this.args);
         }
     }
 }
 class DeleteTitleCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
+        this.title = title;
+    }
+    ifUndo(): boolean {
+        return true;
+    }
+    undo(): void {
+        throw new Error("Method not implemented.");
     }
     public execute() {
         this.receiver.deleteTitle(this.title);
     }
 }
 class AddBookmarkCommand implements Command {
-    constructor(private receiver: Receiver, private title: string) {
+    constructor(private receiver: Receiver, private args: string) {
         this.receiver = receiver;
+        this.args = args;
+    }
+    ifUndo(): boolean {
+        return true;
+    }
+    undo(): void {
+        throw new Error("Method not implemented.");
     }
     public execute() {
-        this.receiver.addBookmark(this.title);
+        this.receiver.addBookmark(this.args);
     }
 }
 class DeleteBookmarkCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
+    }
+    ifUndo(): boolean {
+        return true;
+    }
+    undo(): void {
+        throw new Error("Method not implemented.");
     }
     public execute() {
         this.receiver.deleteBookmark(this.title);
@@ -86,6 +146,12 @@ class OpenCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
     }
+    ifUndo(): boolean {
+        return false;
+    }
+    undo(): void {
+        throw new Error("Method not implemented.");
+    }
     public execute() {
         this.receiver.open(this.title);
     }
@@ -93,6 +159,12 @@ class OpenCommand implements Command {
 class BookmarkCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
+    }
+    ifUndo(): boolean {
+        return false;
+    }
+    undo(): void {
+        throw new Error("Method not implemented.");
     }
     public execute() {
         this.receiver.deleteTitle(this.title);
@@ -102,6 +174,12 @@ class EditCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
     }
+    ifUndo(): boolean {
+        return false;
+    }
+    undo(): void {
+        throw new Error("Method not implemented.");
+    }
     public execute() {
         this.receiver.deleteTitle(this.title);
     }
@@ -109,6 +187,12 @@ class EditCommand implements Command {
 class SaveCommand implements Command {
     constructor(private receiver: Receiver) {
         this.receiver = receiver;
+    }
+    ifUndo(): boolean {
+        return false;
+    }
+    undo(): void {
+        throw new Error("Method not implemented.");
     }
     public execute() {
         this.receiver.save();
@@ -118,6 +202,12 @@ class ShowTreeCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
     }
+    ifUndo(): boolean {
+        return false;
+    }
+    undo(): void {
+        throw new Error("Method not implemented.");
+    }
     public execute() {
         this.receiver.showTree();
     }
@@ -126,6 +216,12 @@ class LsTreeCommand implements Command {
     constructor(private receiver: Receiver) {
         this.receiver = receiver;
     }
+    ifUndo(): boolean {
+        return false;
+    }
+    undo(): void {
+        throw new Error("Method not implemented.");
+    }
     public execute() {
         this.receiver.lsTree();
     }
@@ -133,6 +229,12 @@ class LsTreeCommand implements Command {
 class ReadBookmarkCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
+    }
+    ifUndo(): boolean {
+        return false;
+    }
+    undo(): void {
+        throw new Error("Method not implemented.");
     }
     public execute() {
         this.receiver.readBookmark(this.title);
@@ -238,22 +340,13 @@ class Receiver {
 }
 
 class CommandPool {
-    
-    receiver: Receiver;
-    redoStack: Array<string> = [];
-    undoStack: Array<string> = [];
+    private receiver: Receiver;
+    private invoker: Invoker;
     constructor() {
         this.receiver = new Receiver();
-        this.redoStack = new Array<string>;
-        this.undoStack = new Array<string>;
+        this.invoker = new Invoker();
     };
 
-    public getData(): string {
-        return this.receiver.getData();
-    }
-    public getFileStructure(): string{
-        return this.receiver.getFileStructure();
-    }
     public sendCommand(thecmd: string, args: string): void {
 
         // 创建具体命令对象cmd并设定它的接受者
@@ -261,19 +354,15 @@ class CommandPool {
         switch (thecmd) {
             case "addTitle":
                 cmd = new AddTitleCommand(this.receiver, args);
-                this.undoStack.push(thecmd + "|" + args); 
                 break;
             case "deleteTitle":
                 cmd = new DeleteTitleCommand(this.receiver, args);
-                this.undoStack.push(thecmd + "|" + args); 
                 break;
             case "addBookmark":
                 cmd = new AddBookmarkCommand(this.receiver, args);
-                this.undoStack.push(thecmd + "|" + args); 
                 break;
             case "deleteBookmark":
                 cmd = new DeleteBookmarkCommand(this.receiver, args);
-                this.undoStack.push(thecmd + "|" + args); 
                 break;
             case "open":
                 cmd = new OpenCommand(this.receiver, args);
@@ -286,10 +375,10 @@ class CommandPool {
                 cmd = new SaveCommand(this.receiver);
                 break;
             case "undo":
-                this.undo();
+                this.invoker.undo();
                 return;
             case "redo":
-                this.redo();
+                this.invoker.redo();
                 return;
             case "showTree":
                 cmd = new ShowTreeCommand(this.receiver, args);
@@ -304,76 +393,15 @@ class CommandPool {
                 cmd = new ConcreteCommand(this.receiver);
                 break;
         }
-        if (this.redoStack.length === 0) {
-            this.redoStack = [];
-        }
 
-        // 请求绑定命令
-        const ir = new Invoker(cmd);
-        ir.call();
+        this.invoker.call(cmd);
     };
 
-    undo(): void {
-        if (this.undoStack.length === 0) {
-            return;
-        } else {
-            let theLastCmd = this.undoStack.pop();
-            if (theLastCmd === undefined) {
-                return;
-            }
-            let thelastcmd = theLastCmd.split("|")[0];
-            let args = theLastCmd.split("|")[1];
-            let cmd:Command;
-            switch (thelastcmd) {
-                case "addTitle":
-                    cmd = new DeleteTitleCommand(this.receiver, args);
-                    break;
-                case "deleteTitle":
-                    cmd = new AddTitleCommand(this.receiver, args);
-                    break;
-                case "addBookmark":
-                    args = args.split("@")[0];
-                    cmd = new DeleteBookmarkCommand(this.receiver, args);
-                    break;
-                case "deleteBookmark":
-                    cmd = new AddBookmarkCommand(this.receiver, args);
-                    break;
-                default:
-                    cmd = new ConcreteCommand(this.receiver);
-                    break;
-            }
-            const ir = new Invoker(cmd);
-            ir.call();
-
-            this.redoStack.push(theLastCmd);
-        }
+    public getData(): string {
+        return this.receiver.getData();
     }
-
-    redo(): void {
-        if (this.redoStack.length === 0) {
-            return;
-        } else {
-            let theLastCmd = this.redoStack.pop();
-            if (theLastCmd === undefined) {
-                return;
-            }
-            let thecmd = theLastCmd.split("|")[0];
-            let args = theLastCmd.split("|")[1];
-            let cmd:Command;
-            switch (thecmd) {
-                case "addTitle":
-                    cmd = new AddTitleCommand(this.receiver, args);
-                    break;
-                case "deleteTitle":
-                    cmd = new DeleteTitleCommand(this.receiver, args);
-                    break;
-                default:
-                    cmd = new ConcreteCommand(this.receiver);
-                    break;
-            }
-            const ir = new Invoker(cmd);
-            ir.call();
-        }
+    public getFileStructure(): string{
+        return this.receiver.getFileStructure();
     }
+    
 }
-
