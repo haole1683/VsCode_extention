@@ -9,18 +9,22 @@ interface Iterators {
 class TreeIterator implements Iterators {
     private tree: Tree;
     private seq: Array<Node>;
+    private index: number;
 
     constructor(tree: Tree) {
         this.tree = tree;
+        this.seq = [];
+        this.getSequence();
+        this.index = 0;
     }
 
     private getSequence() {
         let myQueue: Array<Node> = [];
-        myQueue.push(this.tree.root);
+        myQueue.push(this.tree.getRoot());
         while (myQueue.length > 0) {
             let curNode = myQueue.shift();
             if(curNode !== undefined){
-                
+                this.seq.push(curNode);
             }
             curNode?.getChildren().forEach(function (son) {
                 myQueue.push(son);
@@ -29,11 +33,14 @@ class TreeIterator implements Iterators {
     }
 
     public hasNext(): Boolean {
-        throw new Error("Method not implemented.");
+        if (this.index < this.seq.length) {return true;}
+        else { return false;}
     }
 
     public next(): Node {
-        throw new Error("Method not implemented.");
+        return this.seq[this.index++];
     }
     
 }
+
+
