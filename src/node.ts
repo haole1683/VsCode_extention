@@ -17,16 +17,19 @@ interface Node{
 class Catagory implements Node{
     private name: string; // 目录（书签）名称额
     private children: Array<Node>;   // 儿子结点 
+
     constructor(name:string){
         this.name = name;
         this.children = Array<Node>();
     }
+
     public getName(): string{
         return this.name;
     }
     public setName(name:string): void{
         this.name = name;
     }
+
     public addChild(son:Node): void {
         this.children.push(son);
     }
@@ -49,6 +52,7 @@ class Catagory implements Node{
     public setChildren(children: Array<Node>): void {
         this.children = children;
     }
+    
     public getStr(): string {
         return this.name;
     }
@@ -57,10 +61,12 @@ class Catagory implements Node{
 class Bookmark implements Node{
     private name: string; // 目录（书签）名称额
     private readNum: number; 
+
     constructor(name:string){
         this.name = name;
         this.readNum = 0;
     }
+
     public getName(): string{
         return this.name;
     }
@@ -78,7 +84,7 @@ class Bookmark implements Node{
         // 增加阅读次数
         this.readNum++;
     }
-    
+
     public addChild(son:Node): void {
         return;
     }
