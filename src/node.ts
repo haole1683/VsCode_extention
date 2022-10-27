@@ -186,5 +186,3 @@ function testNode(){
     
 }
 testNode();
-
-testNode;

@@ -301,11 +301,12 @@ class BookmarkTree implements Tree{
 
 
 class FileTree implements Tree{
-    private children:Array<Node>;
+    private root:Node;
 
     constructor(){
-        this.children = Array<Node>();
+        this.root = new Folder("base");
     }
+    
     public addNode(node: Node, father?: string | undefined): void {
         throw new Error("Method not implemented.");
     }
@@ -331,6 +332,10 @@ class FileTree implements Tree{
 function testTree(){
     let myTree:BookmarkTree = new BookmarkTree();
     myTree.read("C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk");
+    myTree.printTree();
+    myTree.addNode(new Catagory("傻逼"));
+    myTree.printTree();
+    myTree.deleteNode(new Catagory("傻逼"));
     myTree.printTree();
 }
 testTree();
