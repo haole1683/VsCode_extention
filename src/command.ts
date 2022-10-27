@@ -4,7 +4,8 @@
  */
 
 export { CommandPool };
-import { FactoryProducer} from "./Factory";
+import path = require("path");
+import { FactoryProducer } from "./Factory";
 import { Bookmark, Catagory } from "./node";
 import { BookmarkTree } from "./tree";
 
@@ -20,7 +21,7 @@ class Invoker {
 
     public call(cmd: Command): void {
         cmd.execute();
-        if(cmd.ifUndo()){
+        if (cmd.ifUndo()) {
             this.undoStack.push(cmd);
         }
     }
@@ -92,12 +93,15 @@ class AddTitleCommand implements Command {
         // Perform delete logic
 
         // log logic
+        
         if (this.args.includes("at")) {
             let devided = this.args.split("at");
             let name = devided[0];
             let folder = devided[1];
+            this.receiver.addFatherStack(folder);
             this.receiver.addTitle(name, folder);
         } else {
+            this.receiver.addFatherStack("个人收藏");
             this.receiver.addTitle(this.args);
         }
     }
@@ -111,9 +115,13 @@ class DeleteTitleCommand implements Command {
         return true;
     }
     undo(): void {
-        throw new Error("Method not implemented.");
+        let father = this.receiver.getFatherStack().pop();
+        if (father !== undefined) {
+            this.receiver.addTitle(this.title, father.getName());
+        }
     }
     public execute() {
+        this.receiver.addFatherStack(this.receiver.popFatherStack());
         this.receiver.deleteTitle(this.title);
     }
 }
@@ -140,9 +148,14 @@ class DeleteBookmarkCommand implements Command {
         return true;
     }
     undo(): void {
-        throw new Error("Method not implemented.");
+        let args: string = this.title + "@" + this.receiver.popUrlStack();
+        args = args + "$" + this.receiver.popFatherStack();
+        this.receiver.addBookmark(args);
+    
     }
     public execute() {
+        this.receiver.addFatherStack(this.receiver.getBkTree().findFatherNode(this.title)[0].getName());
+        this.receiver.addUrlStack(this.receiver.getBkTree().findFatherNode(this.title)[0].getStr());
         this.receiver.deleteBookmark(this.title);
     }
 }
@@ -248,12 +261,41 @@ class ReadBookmarkCommand implements Command {
 
 //接收者
 class Receiver {
-    private myBkTree:BookmarkTree;
+    private myBkTree: BookmarkTree;
+    private fatherStack: Array<Catagory>;
+    private urlStack: Array<string>;
     constructor() {
         let bkTreeFactoryProduct = new FactoryProducer().getBookmarkFactory();
         this.myBkTree = bkTreeFactoryProduct.getTree();
+        this.fatherStack = [];
+        this.urlStack = [];
     };
-
+    public getFatherStack(): Array<Catagory> {
+        return this.fatherStack;
+    }
+    public addFatherStack(keyword: string): void {
+        this.fatherStack.push(new Catagory(keyword));
+    }
+    public popFatherStack(): string {
+        let ca = this.fatherStack.pop();
+        if (ca !== undefined) {
+            return ca.getName();
+        }
+        return "";
+    }
+    public getBkTree(): BookmarkTree {
+        return this.myBkTree;
+    }
+    public addUrlStack(url: string): void {
+        this.urlStack.push(url);
+    }
+    public popUrlStack(): string {
+        let str = this.urlStack.pop();
+        if (str !== undefined) {
+            return str;
+        }
+        return "";
+    }
     public action() {
     }
 
@@ -261,7 +303,7 @@ class Receiver {
      * The Cmds receiver receives
      */
     public addTitle(title: string, father?: string) {
-        this.myBkTree.addNode(new Catagory(title),father);
+        this.myBkTree.addNode(new Catagory(title), father);
     }
 
     public deleteTitle(title: string) {
@@ -321,10 +363,10 @@ class CommandPool {
         this.invoker = new Invoker();
     };
 
-    public getReceiver():Receiver{
+    public getReceiver(): Receiver {
         return this.receiver;
     }
-    public getInvoker():Invoker{
+    public getInvoker(): Invoker {
         return this.invoker;
     }
     public sendCommand(thecmd: string, args: string): void {
@@ -388,21 +430,35 @@ class CommandPool {
 
 
 
-function testCommand(){
-    let cmp:CommandPool = new CommandPool();
+function testCommand() {
+    let cmp: CommandPool = new CommandPool();
     console.log("*********************************");
-    cmp.sendCommand("addTitle","嗷嗷");
-    cmp.sendCommand("showTree","null");
-    cmp.sendCommand("undo","null");
-    cmp.sendCommand("showTree","null");
-    cmp.sendCommand("redo","null");
-    cmp.sendCommand("showTree","null");
-    cmp.sendCommand("deleteTitle","嗷嗷");
-    cmp.sendCommand("showTree","null");
-    cmp.sendCommand("addBookmark","百度@www.baidu.com$面向对象");
-    cmp.sendCommand("showTree","null");
-    cmp.sendCommand("deleteBookmark","百度");
-    cmp.sendCommand("showTree","null");
+
+    cmp.sendCommand("addTitle", "嗷嗷");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("deleteTitle", "嗷嗷");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("undo", "null");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("redo", "null");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("addBookmark", "百度@www.baidu.com$面向对象");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("deleteBookmark", "百度");
+    cmp.sendCommand("showTree", "null");
+
+    // cmp.sendCommand("addTitle", "嗷嗷");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("undo", "null");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("redo", "null");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("deleteTitle", "嗷嗷");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("addBookmark", "百度@www.baidu.com$面向对象");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("deleteBookmark", "百度");
+    // cmp.sendCommand("showTree", "null");
     // cmp.sendCommand("open","C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\2.bmk");
     // cmp.sendCommand("showTree","null");
     // cmp.sendCommand("addTitle","嗷嗷");
