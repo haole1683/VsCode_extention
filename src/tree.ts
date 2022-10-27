@@ -1,4 +1,5 @@
 import { Node,Catagory,Bookmark,Folder,File } from "./node";
+export { Tree, BookmarkTree, FileTree };
 
 interface Tree{
     addNode(node:Node,father?:string):void;
