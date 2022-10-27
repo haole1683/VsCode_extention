@@ -1,5 +1,6 @@
 import { Bookmark, Catagory, File, Folder, Node } from "./node";
 import { Tree, BookmarkTree, FileTree } from "./tree";
+export { BookmarkTreeFactory, FileTreeFactory,FactoryProducer};
 
 interface AbstractFactory {
     getTree(path?:string): Tree;

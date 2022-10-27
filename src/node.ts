@@ -107,7 +107,7 @@ class Bookmark implements Node{
         return;
     }
     public getStr(): string {
-        return this.name;
+        return this.url;
     }
 }
 
