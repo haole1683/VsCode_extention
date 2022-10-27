@@ -1,9 +1,9 @@
 import { Node,Catagory,Bookmark,Folder,File } from "./node";
 
 interface Tree{
-    addNode():void;
-    deleteNode():void;
-    read():void;
+    addNode(node:Node,father?:string):void;
+    deleteNode(node:Node):void;
+    read(path:string):void;
     save():void;
     getIterator():Iterable<Node>;
     clear():void;
@@ -15,22 +15,26 @@ class FileTree implements Tree{
     constructor(){
         this.children = Array<Node>();
     }
-    addNode(): void {
+    public addNode(node: Node, father?: string | undefined): void {
+        if(father === undefined){
+            this.children.push(node);
+        }else{
+            
+        }
+    }
+    public deleteNode(node: Node): void {
         throw new Error("Method not implemented.");
     }
-    deleteNode(): void {
+    public read(path: string): void {
         throw new Error("Method not implemented.");
     }
-    read(): void {
+    public save(): void {
         throw new Error("Method not implemented.");
     }
-    save(): void {
+    public getIterator(): Iterable<Node> {
         throw new Error("Method not implemented.");
     }
-    getIterator(): Iterable<Node> {
-        throw new Error("Method not implemented.");
-    }
-    clear(): void {
+    public clear(): void {
         throw new Error("Method not implemented.");
     }
 }
@@ -42,22 +46,23 @@ class BookmarkTree implements Tree{
     constructor(){
         this.children = Array<Node>();
     }
-    addNode(): void {
+    public addNode(node: Node, father?: string | undefined): void {
         throw new Error("Method not implemented.");
     }
-    deleteNode(): void {
+    public deleteNode(node: Node): void {
         throw new Error("Method not implemented.");
     }
-    read(): void {
+    public read(path: string): void {
         throw new Error("Method not implemented.");
     }
-    save(): void {
+    public save(): void {
         throw new Error("Method not implemented.");
     }
-    getIterator(): Iterable<Node> {
+    public getIterator(): Iterable<Node> {
         throw new Error("Method not implemented.");
     }
-    clear(): void {
+    public clear(): void {
         throw new Error("Method not implemented.");
     }
+    
 }
