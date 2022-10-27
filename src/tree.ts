@@ -1,10 +1,14 @@
+import * as  fs from "fs";
+import * as  path from "path";
 import assert = require("assert");
 import { AdapterFromTreeToFile,TargetTree } from "./adapter";
 import { FileOperation } from "./fileOps";
 import { Node,Catagory,Bookmark,Folder,File } from "./node";
 export { Tree, BookmarkTree, FileTree };
 
+
 interface Tree{
+    getRoot(): Node;
     addNode(node:Node,father?:string):void;
     deleteNode(node:Node):void;
     read(path:string):void;
@@ -302,34 +306,207 @@ class BookmarkTree implements Tree{
 
 class FileTree implements Tree{
     private root:Node;
-
-    constructor(){
+    private path:string;
+    constructor(path:string){
         this.root = new Folder("base");
+        this.path = path;
+        this.read();
     }
-    
-    public addNode(node: Node, father?: string | undefined): void {
-        throw new Error("Method not implemented.");
+
+    // 基本get set属性处理
+    public getRoot(): Node {
+       return this.root;
     }
+    public setRoot(node:Folder){
+        this.root = node;
+    }
+    public getPath():string{
+        return this.path;
+    }
+    public setPath(path:string){
+        this.path = path;
+    }
+
+
+    // 结点基本处理
+    /**
+     * 找到关键字为keyword的结点
+     * @param {string} keyword: 关键字keyword
+     * @return 关键字结点的数组
+     */
+    public findNode(keyword: string): Array<Node> {
+        let res:Array<Node> = [];
+        let myQueue: Array<Node> = [];
+        myQueue.push(this.root);
+        while (myQueue.length > 0) {
+            let curNode = myQueue.shift();
+            if(curNode !== undefined){
+                let curName = curNode.getName();
+                if (curName === keyword) {
+                    res.push(curNode);
+                }
+            }
+            curNode?.getChildren().forEach(function (son) {
+                myQueue.push(son);
+            });
+        }
+        return res;
+    }
+
+    /**
+     * 找到关键字结点父亲
+     * Tip：可能有多个相同名字的结点，因此返回的是Array<Node>，如果只想获取一个结点，直接索引[0]即可
+     * @param keyword 结点关键字
+     * @returns 该节点父亲
+     */
+    public findFatherNode(keyword: string): Array<Node> {
+        let myQueue: Array<Node> = [];
+        let fahterArr: Array<Node> = [];
+        myQueue.push(this.root);
+        while (myQueue.length > 0) {
+            let curNode = myQueue.shift();
+            
+            if(curNode !== undefined){
+                curNode.getChildren().forEach(function (son) {
+                if(son !== undefined){
+                        if (son.getName() === keyword&&curNode !== undefined) {
+                            fahterArr.push(curNode);
+                        }
+                    }
+                });
+            }
+            curNode?.getChildren().forEach(function (son) {
+                myQueue.push(son);
+            });
+        }
+        return fahterArr;
+    }
+
+    /**
+     * 向树中添加结点
+     * @param node 要添加的结点
+     * @param fatherName 可选参数，默认添加到根结点下，否则为指定父亲名字下
+     */
+    public addNode(node: Node, fatherName?: string): void {
+        if(fatherName === undefined){
+            this.root.addChild(node);
+        }else{
+            let father:Node = this.findNode(fatherName)[0];
+            father.addChild(node);
+        }
+    }
+
+    /**
+     * 删除树中与node关键字相同的结点
+     * @param node 将要删除的结点
+     */
     public deleteNode(node: Node): void {
-        throw new Error("Method not implemented.");
+        let fathersNode:Array<Node> = this.findFatherNode(node.getName());
+        fathersNode.forEach(function(fatherNode){
+            fatherNode.deleteChild(node);
+        });
     }
-    public read(path: string): void {
-        throw new Error("Method not implemented.");
+
+    
+    // 文件目录读取相关
+    /**
+     * 
+     * @param path 文件（目录）路径（最后以文件（目录）名字结尾，如C:\\Desktop\\1.bmk或者C:\\Desktop\\myFolder)
+     * @returns 返回 Array<string>  arr[0]为文件路径(C:\\Desktop) arr[1]为文件名(目录名)(1.bmk myFolder)
+     */
+    private getPathAndName(path:string):Array<string>{
+        let filePath:string = path;
+        let devidedStr:Array<string> = filePath.split("\\");
+        let fileName:string = devidedStr[devidedStr.length-1];
+        let fileDir = filePath.substring(0,filePath.length-fileName.length-1);
+        return [fileDir,fileName];
     }
+    private readHelper(father:Node,fpath:string):void{
+        if(fs.existsSync(fpath)){
+            if(fs.statSync(fpath).isDirectory()){//是目录
+                let newFolder = new Folder(this.getPathAndName(fpath)[1]);
+                father.addChild(newFolder);
+                let son = fs.readdirSync(fpath);
+                for(let i =0;i<son.length;i++){
+                    let newPath = path.join(fpath,son[i]);
+                    this.readHelper(newFolder,newPath);
+                }
+            }else{// 是文件
+                father.addChild(new File(this.getPathAndName(fpath)[1]));
+            }
+        }
+    }
+
+    /**
+     * 根据当前path，读取path下文件结构到当前树中
+     */
+    public read(): void {
+        this.readHelper(this.root,this.path);  
+    }
+    /**
+     * 无用，不考虑更改文件目录
+     */
     public save(): void {
-        throw new Error("Method not implemented.");
+        return; 
     }
+
+
+    // 文件目录显示输出相关
+    private lsTreeHelper(node:Node,level:number,printString:Array<string>):void{
+        let fName = node.getName();
+        if(level === 0){
+            printString.push(fName);
+        }else{
+            let strPrint:string="";
+            for(let i=0;i<level;i++){
+                strPrint += " ";
+            }
+            printString.push(strPrint +"├" + fName);
+        }
+        let nodeArr:Array<Node> = node.getChildren();
+        for(let i =0;i<nodeArr.length;i++){
+            this.lsTreeHelper(nodeArr[i],level+1,printString);
+        }
+        
+        
+    }
+    /**
+     * 获取打印字符串
+     * @returns 字符串
+     */
+    private lsTreeString() :string{
+        let printString:Array<string> = [];
+        this.lsTreeHelper(this.root,0,printString);
+        let retStr:string = "";
+        printString.forEach(function(str){
+            retStr += (str+"\n");
+        });
+        return retStr;
+    }
+    /**
+     * console.log 输出打印，用于调试
+     */
+    public printlsTree():void{
+        let str:string = this.lsTreeString();
+        console.log(str);
+    }
+
     public getIterator(): Iterable<Node> {
         throw new Error("Method not implemented.");
     }
-    public clear(): void {
-        throw new Error("Method not implemented.");
+
+    /**
+     * 清除内存中树
+     */
+     public clear(): void {
+        this.root.setChildren(new Array<Node>);
     }
     
+
 }
 
 // 测试
-function testTree(){
+function testBookMarkTree(){
     let myTree:BookmarkTree = new BookmarkTree();
     myTree.read("C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk");
     myTree.printTree();
@@ -338,4 +515,9 @@ function testTree(){
     myTree.deleteNode(new Catagory("傻逼"));
     myTree.printTree();
 }
-testTree();
+function testFileTree(){
+    let path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files";
+    let myTree:FileTree = new FileTree(path);
+    myTree.printlsTree();
+}
+testFileTree();
