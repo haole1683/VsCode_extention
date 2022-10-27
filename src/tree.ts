@@ -10,10 +10,52 @@ interface Tree{
 }
 
 class FileTree implements Tree{
-    private children:Array<Node>;
+    private root:Node;
 
     constructor(){
-        this.children = Array<Node>();
+        this.root = new Catagory("base");
+    }
+
+    private findNode(keyword: string): Node | undefined {
+        let myQueue: Array<Node> = [];
+        myQueue.push(this.root);
+        while (myQueue.length > 0) {
+            let curNode = myQueue.shift();
+            let curName = curNode?.getName();
+            if (curName === keyword) {
+                return curNode;
+            }
+            curNode.get().forEach(function (son) {
+                myQueue.push(son);
+            });
+        }
+        return undefined;
+    }
+
+    private findFatherNode(keyword: string): Array<Node> {
+        // 找到爹
+        let myQueue: Array<Node> = [];
+        let fahterArr: Array<Node> = [];
+        myQueue.push(this.root);
+        while (myQueue.length > 0) {
+            let curNode = myQueue.shift();
+            console.log(curNode);
+            let flag = false;
+            curNode?.getSons().forEach(function (son) {
+                if (son.getName() === keyword) {
+                    flag = true;
+                }
+            });
+            if (flag) {
+                if(curNode !== undefined){
+                    fahterArr.push(curNode);
+                }
+            }
+            curNode?.getSons().forEach(function (son) {
+                myQueue.push(son);
+            });
+        }
+        return fahterArr;
     }
     public addNode(node: Node, father?: string | undefined): void {
         if(father === undefined){
