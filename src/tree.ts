@@ -304,6 +304,7 @@ class BookmarkTree implements Tree{
 }
 
 
+
 class FileTree implements Tree{
     private root:Node;
     private path:string;
@@ -505,6 +506,9 @@ class FileTree implements Tree{
 
 }
 
+
+
+
 // 测试
 function testBookMarkTree(){
     let myTree:BookmarkTree = new BookmarkTree();
@@ -520,4 +524,5 @@ function testFileTree(){
     let myTree:FileTree = new FileTree(path);
     myTree.printlsTree();
 }
+
 testFileTree();
