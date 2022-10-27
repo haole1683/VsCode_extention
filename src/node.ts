@@ -1,9 +1,11 @@
 export {Node,Catagory,Bookmark,Folder,File};
 
 interface Node{
-    addChild():void;
-    deleteChild():void;
-    print():void;
+    getName():string;
+    setName(name:string):void;
+    addChild(son:Node):void;
+    deleteChild(son:Node):void;
+    getStr():string;
 }
 
 class Catagory implements Node{
@@ -13,14 +15,30 @@ class Catagory implements Node{
         this.name = name;
         this.sons = Array<Node>();
     }
-    addChild(): void {
-        throw new Error("Method not implemented.");
+    public getName(): string{
+        return this.name;
     }
-    deleteChild(): void {
-        throw new Error("Method not implemented.");
+    public setName(name:string): void{
+        this.name = name;
     }
-    print(): void {
-        throw new Error("Method not implemented.");
+    public addChild(son:Node): void {
+        this.sons.push(son);
+    }
+    public deleteChild(son: Node): void {
+        let sonName:string = son.getName();
+        let i = -1;
+        for (i = 0; i < this.sons.length; i++) {
+            if (this.sons[i].getName() === sonName) {
+                break;
+            }
+        }
+        if (i === -1) { 
+            return;
+        }
+        this.sons.splice(i, 1);
+    }
+    public getStr(): string {
+        return this.name;
     }
 }
 
@@ -31,14 +49,20 @@ class Bookmark implements Node{
         this.name = name;
         this.readNum = 0;
     }
-    addChild(): void {
-        throw new Error("Method not implemented.");
+    public getName(): string{
+        return this.name;
     }
-    deleteChild(): void {
-        throw new Error("Method not implemented.");
+    public setName(name:string): void{
+        this.name = name;
     }
-    print(): void {
-        throw new Error("Method not implemented.");
+    public addChild(son:Node): void {
+        return;
+    }
+    public deleteChild(son: Node): void {
+        return;
+    }
+    public getStr(): string {
+        return this.name;
     }
 }
 
@@ -49,14 +73,30 @@ class Folder implements Node{
         this.name = name;
         this.sons = Array<Node>();
     }
-    addChild(): void {
-        throw new Error("Method not implemented.");
+    public getName(): string {
+        return this.name;
     }
-    deleteChild(): void {
-        throw new Error("Method not implemented.");
+    public setName(name: string): void {
+        this.name = name;
     }
-    print(): void {
-        throw new Error("Method not implemented.");
+    public addChild(son: Node): void {
+        this.sons.push(son);
+    }
+    public deleteChild(son: Node): void {
+        let sonName:string = son.getName();
+        let i = -1;
+        for (i = 0; i < this.sons.length; i++) {
+            if (this.sons[i].getName() === sonName) {
+                break;
+            }
+        }
+        if (i === -1) { 
+            return;
+        }
+        this.sons.splice(i, 1);
+    }
+    public getStr(): string {
+        return this.name;
     }
 }
 
@@ -65,13 +105,19 @@ class File implements Node{
     constructor(name:string){
         this.name = name;
     }
-    addChild(): void {
-        throw new Error("Method not implemented.");
+    public getName(): string{
+        return this.name;
     }
-    deleteChild(): void {
-        throw new Error("Method not implemented.");
+    public setName(name:string): void{
+        this.name = name;
     }
-    print(): void {
-        throw new Error("Method not implemented.");
+    public addChild(son:Node): void {
+        return;
+    }
+    public deleteChild(son: Node): void {
+        return;
+    }
+    public getStr(): string {
+        return this.name;
     }
 }
