@@ -21,6 +21,7 @@ class FileTree implements Tree{
         this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk";
     }
 
+    // 结点基本处理
     /**
      * 找到关键字为keyword的结点
      * @param {string} keyword: 关键字keyword
@@ -33,7 +34,7 @@ class FileTree implements Tree{
         while (myQueue.length > 0) {
             let curNode = myQueue.shift();
             if(curNode !== undefined){
-                let curName = curNode?.getName();
+                let curName = curNode.getName();
                 if (curName === keyword) {
                     res.push(curNode);
                 }
@@ -100,6 +101,7 @@ class FileTree implements Tree{
     }
 
 
+    // 字符串基本处理
     /**
      * 获取k个#的字符串
      * @param num 几个'#'
@@ -112,7 +114,12 @@ class FileTree implements Tree{
         }
         return str;
     }
-    // 字符串有前几个#
+
+    /**
+     * 字符串有前几个#
+     * @param str 输入字符串
+     * @returns 数字
+     */ 
     private getNSharpOfStr(str: string): number {
         let i: number = 0;
         for (i = 0; i < str.length; i++) {
@@ -124,7 +131,8 @@ class FileTree implements Tree{
         return i;
     }
 
-
+    
+    // 文件导入以及写出
     /**
      * 从path路径中读取bmk文件，并在内存中生成树
      * @param path bmk文件路径
@@ -157,12 +165,12 @@ class FileTree implements Tree{
                 let devidedStr: Array<string> = str.split("](");
                 let bkName: string = devidedStr[0].substring(1);
                 let bkUrl: string = devidedStr[1].substring(0, devidedStr[1].length - 1);
-                let fatherNode = this.findNode(lastKeyWord);
-                fatherNode?.addSons(new Node(bkName, NodeType.leaf, bkUrl));
+                let fatherNode = this.findNode(lastKeyWord)[0];
+                fatherNode.addChild(new Bookmark(bkName, bkUrl));
             } else { // 目录
                 let folderName: string = str.split(" ")[1];
-                let fatherNode = this.findNode(fatherKey);
-                fatherNode?.addSons(new Node(folderName, NodeType.branch));
+                let fatherNode = this.findNode(fatherKey)[0];
+                fatherNode.addChild(new Catagory(folderName));
                 if (level >= record.length) {
                     record.push(folderName);
                 } else {
