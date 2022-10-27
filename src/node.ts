@@ -178,3 +178,13 @@ class File implements Node{
         return this.name;
     }
 }
+
+
+function testNode(){
+    let myNode:Node = new Bookmark("11","111");
+    console.log(myNode instanceof Folder);
+    
+}
+testNode();
+
+testNode;
