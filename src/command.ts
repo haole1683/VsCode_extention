@@ -8,19 +8,16 @@ import { BookmarkTree, FileTree } from "./tree";
 class Invoker {
     redoStack: Array<Command>;
     undoStack: Array<Command>;
-
     constructor() {
         this.redoStack = [];
         this.undoStack = [];
     }
-
     public call(cmd: Command): void {
         cmd.execute();
         if (cmd.ifUndo()) {
             this.undoStack.push(cmd);
         }
     }
-
     public undo(): void {
         if (this.undoStack.length === 0) {
             return;
@@ -33,7 +30,6 @@ class Invoker {
             this.redoStack.push(theLastCmd);
         }
     }
-
     public redo(): void {
         if (this.redoStack.length === 0) {
             return;
@@ -73,7 +69,6 @@ class AddTitleCommand implements Command {
     constructor(private receiver: Receiver, private args: string) {
         this.receiver = receiver;
         this.args = args;
-        
     }
     ifUndo(): boolean {
         return true;
@@ -174,6 +169,7 @@ class DeleteBookmarkCommand implements Command {
     }
 }
 
+//打开书签命令
 class OpenCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
@@ -182,12 +178,13 @@ class OpenCommand implements Command {
         return false;
     }
     undo(): void {
-        throw new Error("Method not implemented.");
     }
     public execute() {
         this.receiver.open(this.title);
     }
 }
+
+//初始化书签命令
 class BookmarkCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
@@ -202,6 +199,8 @@ class BookmarkCommand implements Command {
         this.receiver.deleteTitle(this.title);
     }
 }
+
+//修改所打开的标签文件命令
 class EditCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
@@ -210,12 +209,13 @@ class EditCommand implements Command {
         return false;
     }
     undo(): void {
-        throw new Error("Method not implemented.");
     }
     public execute() {
         this.receiver.deleteTitle(this.title);
     }
 }
+
+//保存命令
 class SaveCommand implements Command {
     constructor(private receiver: Receiver) {
         this.receiver = receiver;
@@ -224,12 +224,13 @@ class SaveCommand implements Command {
         return false;
     }
     undo(): void {
-        throw new Error("Method not implemented.");
     }
     public execute() {
         this.receiver.save();
     }
 }
+
+//展示当前书签树命令
 class ShowTreeCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
@@ -238,12 +239,13 @@ class ShowTreeCommand implements Command {
         return false;
     }
     undo(): void {
-        throw new Error("Method not implemented.");
     }
     public execute() {
         this.receiver.showTree();
     }
 }
+
+//展示文件树命令
 class LsTreeCommand implements Command {
     constructor(private receiver: Receiver) {
         this.receiver = receiver;
@@ -252,12 +254,13 @@ class LsTreeCommand implements Command {
         return false;
     }
     undo(): void {
-        throw new Error("Method not implemented.");
     }
     public execute() {
         this.receiver.lsTree();
     }
 }
+
+//读书签命令
 class ReadBookmarkCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
@@ -278,56 +281,53 @@ class ReadBookmarkCommand implements Command {
 class Receiver {
     private myBkTree: BookmarkTree;
     private myFileTree: FileTree;
-    private fatherStack: Array<Catagory>;
-    private urlStack: Array<string>;
+    // private fatherStack: Array<Catagory>;
+    // private urlStack: Array<string>;
     constructor() {
         let bkTreeFactoryProduct = new FactoryProducer().getBookmarkFactory();
         this.myBkTree = bkTreeFactoryProduct.getTree();
         let fileTreeFactoryProduct = new FactoryProducer().getFileFactory();
         this.myFileTree = fileTreeFactoryProduct.getTree();
-        this.fatherStack = [];
-        this.urlStack = [];
+        // this.fatherStack = [];
+        // this.urlStack = [];
     };
+    //获取父节点
     public getFather(name: string): string{
         let fatherNode = this.myBkTree.findFatherNode(name)[0];
         return fatherNode.getName();
     }
+    //获取节点
     public getNode(name: string): Node{
         let node = this.myBkTree.findNode(name)[0];
         return node;
     }
-    public getFatherStack(): Array<Catagory> {
-        return this.fatherStack;
-    }
-    public addFatherStack(keyword: string): void {
-        this.fatherStack.push(new Catagory(keyword));
-    }
-    public popFatherStack(): string {
-        let ca = this.fatherStack.pop();
-        if (ca !== undefined) {
-            return ca.getName();
-        }
-        return "";
-    }
-    public getBkTree(): BookmarkTree {
-        return this.myBkTree;
-    }
-    public addUrlStack(url: string): void {
-        this.urlStack.push(url);
-    }
-    public popUrlStack(): string {
-        let str = this.urlStack.pop();
-        if (str !== undefined) {
-            return str;
-        }
-        return "";
-    }
-    public action() {
-    }
-
-    /**
-     * The Cmds receiver receives
-     */
+    // public getFatherStack(): Array<Catagory> {
+    //     return this.fatherStack;
+    // }
+    // public addFatherStack(keyword: string): void {
+    //     this.fatherStack.push(new Catagory(keyword));
+    // }
+    // public popFatherStack(): string {
+    //     let ca = this.fatherStack.pop();
+    //     if (ca !== undefined) {
+    //         return ca.getName();
+    //     }
+    //     return "";
+    // }
+    // public getBkTree(): BookmarkTree {
+    //     return this.myBkTree;
+    // }
+    // public addUrlStack(url: string): void {
+    //     this.urlStack.push(url);
+    // }
+    // public popUrlStack(): string {
+    //     let str = this.urlStack.pop();
+    //     if (str !== undefined) {
+    //         return str;
+    //     }
+    //     return "";
+    // }
+    //添加书签目录
     public addTitle(title: string | Node, father?: string) {
         if (typeof title === 'string') {
             this.myBkTree.addNode(new Catagory(title), father);
@@ -335,11 +335,11 @@ class Receiver {
             this.myBkTree.addNode(title, father);
         }
     }
-
+    //删除书签目录
     public deleteTitle(title: string) {
         this.myBkTree.deleteNode(new Catagory(title));
     }
-
+    //添加书签目录
     public addBookmark(bkName: string, url: string, folder: string) {
         // let devide = args.split("$");
         // let folder: string = devide[1];
@@ -349,40 +349,39 @@ class Receiver {
         // let bkName: string = bmkArr[0];
         this.myBkTree.addNode(new Bookmark(bkName, url), folder);
     }
-
+    //删除书签目录
     public deleteBookmark(args: string) {
         this.myBkTree.deleteNode(new Bookmark(args,""));
     }
-
+    //打开文件
     public open(filePath: string) {
         console.log("Path is", filePath);
         this.myBkTree.read(filePath);
         this.myFileTree.read(filePath);
     }
-
+    //保存文件
     public save() {
         this.myBkTree.save();
     }
-
+    //展示树
     public showTree() {
         this.myBkTree.printTree();
     }
-
-    public lsShowTree() {
-        return this.myBkTree.getLsTreeString();
-    }
-
+    //展示文件树
+    // public lsShowTree() {
+    //     return this.myBkTree.getLsTreeString();
+    // }
+    //展示文件树
     public lsTree(){
         return this.myFileTree.lsTreeString();
     }
-
+    //阅读书签
     public readBookmark(title: string) {
         this.myBkTree.readBookmark(title);
     }
-
-    public getData(): string {
-        return this.myBkTree.getFileFormatContent2();
-    }
+    // public getData(): string {
+    //     return this.myBkTree.getFileFormatContent2();
+    // }
 }
 
 class CommandPool {
@@ -393,14 +392,13 @@ class CommandPool {
         this.invoker = new Invoker();
     };
 
-    public getReceiver(): Receiver {
-        return this.receiver;
-    }
-    public getInvoker(): Invoker {
-        return this.invoker;
-    }
+    // public getReceiver(): Receiver {
+    //     return this.receiver;
+    // }
+    // public getInvoker(): Invoker {
+    //     return this.invoker;
+    // }
     public sendCommand(thecmd: string, args: string): void {
-
         // 创建具体命令对象cmd并设定它的接受者
         // let cmd: Command = new ConcreteCommand(this.receiver);
         let cmd: Command = new EmptyCommand();
@@ -449,12 +447,12 @@ class CommandPool {
         this.invoker.call(cmd);
     };
 
-    public getData(): string {
-        return this.receiver.getData();
-    }
-    public getFileStructure(): string {
-        return this.receiver.lsTree();
-    }
+    // public getData(): string {
+    //     return this.receiver.getData();
+    // }
+    // public getFileStructure(): string {
+    //     return this.receiver.lsTree();
+    // }
 }
 
 
