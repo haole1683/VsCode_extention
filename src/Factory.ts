@@ -25,7 +25,7 @@ class BookmarkTreeFactory implements AbstractFactory {
 class FileTreeFactory implements AbstractFactory {
     getTree(path?: string): FileTree {
         if (path === undefined) {
-            return new FileTree("");
+            return new FileTree();
         } else {
             return new FileTree(path);
         }

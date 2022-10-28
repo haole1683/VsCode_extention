@@ -354,7 +354,7 @@ class Receiver {
     }
 
     public getData(): string {
-        return this.myBkTree.getFileFormatContent();
+        return this.myBkTree.getFileFormatContent2();
     }
 }
 
