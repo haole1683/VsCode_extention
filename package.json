@@ -14,7 +14,8 @@
     "onView:TreeViewTest",
     "onCommand:case2script.helloWorld",
     "onCommand:case2script.askQuestion",
-    "onCommand:TreeViewTest_One.opendir",
+    "onCommand:FileStructure.opendir",
+    "onCommand:BookmarkStructure.opendir",
     "onCommand:case2script.addTitle",
     "onCommand:case2script.deleteTitle",
     "onCommand:case2script.addBookmark",
@@ -35,7 +36,7 @@
       "activitybar": [
         {
           "id": "TreeViewTest",
-          "title": "我的目录树",
+          "title": "我的书签",
           "icon": "media/books.svg"
         }
       ]
@@ -43,12 +44,12 @@
     "views": {
       "TreeViewTest": [
         {
-          "id": "TreeViewTest_One",
-          "name": "树视图测试1"
+          "id": "FileStructure",
+          "name": "文件结构"
         },
         {
-          "id": "TreeViewTest_TWO",
-          "name": "树视图测试2"
+          "id": "BookmarkStructure",
+          "name": "书签结构"
         }
       ]
     },
@@ -62,8 +63,13 @@
         "title": "Ask Question"
       },
       {
-        "command": "TreeViewTest_One.opendir",
+        "command": "FileStructure.opendir",
         "title": "打开文件夹",
+        "icon": "media/open.svg"
+      },
+      {
+        "command": "BookmarkStructure.opendir",
+        "title": "打开书签文件",
         "icon": "media/open.svg"
       },
       {
@@ -136,8 +142,13 @@
       ],
       "view/title": [
         {
-          "command": "TreeViewTest_One.opendir",
-          "when": "view == TreeViewTest_One",
+          "command": "FileStructure.opendir",
+          "when": "view == FileStructure",
+          "group": "navigation"
+        },
+        {
+          "command": "BookmarkStructure.opendir",
+          "when": "view == BookmarkStructure",
           "group": "navigation"
         }
       ]

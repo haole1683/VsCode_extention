@@ -9,12 +9,12 @@ import { CommandPool } from './command';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-function getHtml(type:number,data:string):string{
+function getHtml(type: number, data: string): string {
     // 1为访问网址， 2为显示标签
-    let htmlStr:string;
-    if(type ===1 ){
-        htmlStr = 
-    `
+    let htmlStr: string;
+    if (type === 1) {
+        htmlStr =
+            `
             <!DOCTYPE html >
             <html lang="en">
             <head>
@@ -35,9 +35,9 @@ function getHtml(type:number,data:string):string{
           </body>
           </html>
             `;
-    }else{
-        htmlStr = 
-        `
+    } else {
+        htmlStr =
+            `
             <!DOCTYPE html >
             <html lang="en">
             <head>
@@ -69,21 +69,22 @@ export async function activate(context: vscode.ExtensionContext) {
     // Use the console to output diagnostic information (console.log) and errors (console.error)
     // This line of code will only be executed once when your extension is activated
     console.log('Congratulations, your extension "case2script" is now active!');
-
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with registerCommand
-    // The commandId parameter must match the command field in package.json
+    /**
+         * Command 指令
+         */
+    let commandPool = new CommandPool(); // 命令池
 
 
     /**
      * 大纲显示
      */
-    //注册命令 case2script.opendir，使用这个命令的时候，会调用callback()
-    let treeviewTest = vscode.commands.registerCommand('TreeViewTest_One.opendir', () => {
+    // 文件结构
+    //注册命令 FileStructure.opendir，使用这个命令的时候，会调用callback()
+    let fileStructureTest = vscode.commands.registerCommand('FileStructure.opendir', () => {
         vscode.window.showInformationMessage("hello TTT");
         let options = {
             canSelectFiles: true,		//是否可选择文件
-            canSelectFolders: false,		//是否可选择目录
+            canSelectFolders: true,		//是否可选择目录
             canSelectMany: false,		//是否可多选
             defaultUri: vscode.Uri.file("D:/VScode"),	//默认打开的文件夹
             openLabel: 'Choose Your file',
@@ -101,18 +102,11 @@ export async function activate(context: vscode.ExtensionContext) {
                 var loadDir = loadUri.substring(1, loadUri.length);
                 console.log(loadDir);
                 vscode.window.showInformationMessage("open dir: " + loadDir);
-                vscode.window.registerTreeDataProvider('TreeViewTest_One', new MyTreeData(loadDir));
-
-
-                // 显示书签栏树形结构
-                let content: string = fs.readFileSync(loadDir, "utf-8");
-                let lines: Array<string> = content.split('\n');
-
+                vscode.window.registerTreeDataProvider('FileStructure', new MyTreeData(loadDir, "file"));
             }
         });
     });
-    context.subscriptions.push(treeviewTest);
-
+    context.subscriptions.push(fileStructureTest);
     //注册命令 MyTreeItem.itemClick
     context.subscriptions.push(vscode.commands.registerCommand('MyTreeItem.itemClick', (label, filePath, url) => {
         //TODO：可以获取文件内容显示出来，这里暂时只打印入参
@@ -130,21 +124,62 @@ export async function activate(context: vscode.ExtensionContext) {
                     retainContextWhenHidden: true
                 }
             );
-            panel.webview.html = getHtml(1,url);
+            panel.webview.html = getHtml(1, url);
         }
     }));
-
-    //function activate 中 添加
-    //注册命令 TreeViewTest_One.item.add
-    context.subscriptions.push(vscode.commands.registerCommand('TreeViewTest_One.item.add', () => {
+    //注册命令 FileStructure.item.add
+    context.subscriptions.push(vscode.commands.registerCommand('FileStructure.item.add', () => {
         //TODO：你想要执行的操作，这里只弹出信息
         vscode.window.showInformationMessage('add');
     }));
-    //注册命令 TreeViewTest_One.item.delete
-    context.subscriptions.push(vscode.commands.registerCommand('TreeViewTest_One.item.delete', () => {
+    //注册命令 FileStructure.item.delete
+    context.subscriptions.push(vscode.commands.registerCommand('FileStructure.item.delete', () => {
         //TODO：你想要执行的操作，这里只弹出信息
         vscode.window.showInformationMessage('delete');
     }));
+
+    // 书签结构
+    //注册命令 FileStructure.opendir，使用这个命令的时候，会调用callback()
+    let bookMarkStructureTest = vscode.commands.registerCommand('BookmarkStructure.opendir', () => {
+        vscode.window.showInformationMessage("BookMark");
+        let options = {
+            canSelectFiles: true,		//是否可选择文件
+            canSelectFolders: false,		//是否可选择目录
+            canSelectMany: false,		//是否可多选
+            defaultUri: vscode.Uri.file("D:/VScode"),	//默认打开的文件夹
+            openLabel: 'Choose Your file',
+            title: "Hello"
+        };
+        vscode.window.showOpenDialog(options).then(result => {
+            if (result === undefined) {
+                vscode.window.showInformationMessage("can't open filestruture dir.");
+            }
+            else {
+                vscode.window.showInformationMessage("open dir: " + result.toString());
+                //TODO: 这里 URI 转本地路径，暂时先这样，以后再改
+                var loadUri = result[0].path.toString();
+                console.log("1" + loadUri);
+                var loadDir = loadUri.substring(1, loadUri.length);
+                console.log(loadDir);
+                vscode.window.showInformationMessage("open dir: " + loadDir);
+                vscode.window.registerTreeDataProvider('BookmarkStructure', new MyTreeData(loadDir, "bookmark"));
+            }
+        });
+    });
+    context.subscriptions.push(bookMarkStructureTest);
+
+    //注册命令 FileStructure.item.add
+    context.subscriptions.push(vscode.commands.registerCommand('BookmarkStructure.item.add', () => {
+        //TODO：你想要执行的操作，这里只弹出信息
+        vscode.window.showInformationMessage('add');
+    }));
+    //注册命令 FileStructure.item.delete
+    context.subscriptions.push(vscode.commands.registerCommand('BookmarkStructure.item.delete', () => {
+        //TODO：你想要执行的操作，这里只弹出信息
+        vscode.window.showInformationMessage('delete');
+    }));
+
+
 
 
 
@@ -170,7 +205,6 @@ export async function activate(context: vscode.ExtensionContext) {
     });
     context.subscriptions.push(disposable);
 
-
     // askQ部分
     let askQ = vscode.commands.registerCommand("case2script.askQuestion", async () => {
         let answer = await vscode.window.showInformationMessage("How was your day ?", "good", "bad",);
@@ -184,10 +218,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(askQ);
 
 
-    /**
-     * Command 指令
-     */
-    let commandPool = new CommandPool(); // 命令池
+
 
     let addTitleCmd = vscode.commands.registerCommand('case2script.addTitle', async () => {
         // The code you place here will be executed every time your command is executed
@@ -315,8 +346,8 @@ export async function activate(context: vscode.ExtensionContext) {
             'webPage',
             "Working On",
             {
-                viewColumn:vscode.ViewColumn.Active,
-                preserveFocus:true
+                viewColumn: vscode.ViewColumn.Active,
+                preserveFocus: true
             },
             {
                 enableScripts: true,
@@ -324,11 +355,11 @@ export async function activate(context: vscode.ExtensionContext) {
                 // preserveFocus:true,
             }
         );
-        let dataStr:string = commandPool.getData();
-        var reg = new RegExp("\n", "g" );
-        dataStr = dataStr.replace(reg,"<br/>");
+        let dataStr: string = commandPool.getData();
+        var reg = new RegExp("\n", "g");
+        dataStr = dataStr.replace(reg, "<br/>");
 
-        panel.webview.html = getHtml(2,dataStr);
+        panel.webview.html = getHtml(2, dataStr);
     });
     context.subscriptions.push(showTreeCmd);
 
@@ -338,8 +369,8 @@ export async function activate(context: vscode.ExtensionContext) {
             'webPage',
             "Working On",
             {
-                viewColumn:vscode.ViewColumn.Active,
-                preserveFocus:true
+                viewColumn: vscode.ViewColumn.Active,
+                preserveFocus: true
             },
             {
                 enableScripts: true,
@@ -347,13 +378,13 @@ export async function activate(context: vscode.ExtensionContext) {
                 // preserveFocus:true,
             }
         );
-        let dataStr:string = commandPool.getFileStructure();
-        let reg = new RegExp("\n", "g" );
-        let reg2 = new RegExp(" ","g");
-        dataStr = dataStr.replace(reg,"<br/>");
-        dataStr = dataStr.replace(reg2,"&nbsp&nbsp&nbsp&nbsp");
+        let dataStr: string = commandPool.getFileStructure();
+        let reg = new RegExp("\n", "g");
+        let reg2 = new RegExp(" ", "g");
+        dataStr = dataStr.replace(reg, "<br/>");
+        dataStr = dataStr.replace(reg2, "&nbsp&nbsp&nbsp&nbsp");
 
-        panel.webview.html = getHtml(2,dataStr);
+        panel.webview.html = getHtml(2, dataStr);
     });
     context.subscriptions.push(lsTreeCmd);
 

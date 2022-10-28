@@ -377,11 +377,11 @@ class Receiver {
     }
 
     public readBookmark(title: string) {
-        // this.myBkTree.readBookmark(title);
+        this.myBkTree.readBookmark(title);
     }
 
     public getData(): string {
-        return this.myBkTree.getFileFormatContent();
+        return this.myBkTree.getFileFormatContent2();
     }
 }
 
@@ -455,7 +455,6 @@ class CommandPool {
     public getFileStructure(): string {
         return this.receiver.lsTree();
     }
-
 }
 
 

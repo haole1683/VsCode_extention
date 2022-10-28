@@ -421,9 +421,14 @@ class BookmarkTree implements Tree{
 class FileTree implements Tree{
     private root:Node;
     private path:string;
-    constructor(path:string){
+    constructor(path?:string){
         this.root = new Folder("base");
-        this.path = path;
+        if(path === undefined){
+            this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files";
+        }else{
+            this.path = path;
+        }
+        
         this.read(this.path);
     }
 
