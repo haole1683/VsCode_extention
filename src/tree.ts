@@ -24,7 +24,8 @@ class BookmarkTree implements Tree{
     constructor(){
         this.root = new Catagory("个人收藏");
         this.bookmarkMap = new Map<string,number>;
-        this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk";
+        // this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk";
+        this.path = "/Users/leizhe/code/lab/VsCode_extention/files/1.bmk";
         this.read(this.path);
     };
 

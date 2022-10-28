@@ -1,12 +1,7 @@
-/**
- * https://juejin.cn/post/7032303198333632543
- * https://blog.csdn.net/fanyun_01/article/details/51836174
- */
-
 export { CommandPool };
 import path = require("path");
 import { FactoryProducer } from "./Factory";
-import { Bookmark, Catagory } from "./node";
+import { Bookmark, Catagory, Node } from "./node";
 import { BookmarkTree, FileTree } from "./tree";
 
 //调用者
@@ -52,19 +47,16 @@ class Invoker {
     }
 }
 
-
-
-//抽象命令
+//命令接口
 interface Command {
     execute(): void;
     undo(): void;
     ifUndo(): boolean;
 }
 
-//具体命令
-class ConcreteCommand implements Command {
-    constructor(private receiver: Receiver) {
-        this.receiver = receiver;
+//空命令
+class EmptyCommand implements Command {
+    constructor() {
     }
     ifUndo(): boolean {
         return false;
@@ -72,15 +64,16 @@ class ConcreteCommand implements Command {
     undo(): void {
         throw new Error("Method not implemented.");
     }
-
     public execute() {
-        this.receiver.action();
     }
 }
+
+//添加书签目录命令
 class AddTitleCommand implements Command {
     constructor(private receiver: Receiver, private args: string) {
         this.receiver = receiver;
         this.args = args;
+        
     }
     ifUndo(): boolean {
         return true;
@@ -89,76 +82,98 @@ class AddTitleCommand implements Command {
         this.receiver.deleteTitle(this.args);
     }
     public execute() {
-        // Check logic
-        // Perform delete logic
-
-        // log logic
-        
         if (this.args.includes("at")) {
             let devided = this.args.split("at");
             let name = devided[0];
             let folder = devided[1];
-            this.receiver.addFatherStack(folder);
+            // this.receiver.addFatherStack(folder);
             this.receiver.addTitle(name, folder);
         } else {
-            this.receiver.addFatherStack("个人收藏");
+            // this.receiver.addFatherStack("个人收藏");
             this.receiver.addTitle(this.args);
         }
     }
 }
+
+//删除书签目录命令
 class DeleteTitleCommand implements Command {
+    private fatherName: string;
+    private node: Node;
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
         this.title = title;
+        this.node = this.receiver.getNode(title);
+        this.fatherName = "";
     }
     ifUndo(): boolean {
         return true;
     }
     undo(): void {
-        let father = this.receiver.getFatherStack().pop();
-        if (father !== undefined) {
-            this.receiver.addTitle(this.title, father.getName());
-        }
+        // let father = this.receiver.getFatherStack().pop();
+        // if (father !== undefined) {
+        //     this.receiver.addTitle(this.title, father.getName());
+        // }
+        this.receiver.addTitle(this.node, this.fatherName);
     }
     public execute() {
-        this.receiver.addFatherStack(this.receiver.popFatherStack());
+        // this.receiver.addFatherStack(this.receiver.popFatherStack());
+        this.fatherName = this.receiver.getFather(this.title);
         this.receiver.deleteTitle(this.title);
     }
 }
+
+//添加书签
 class AddBookmarkCommand implements Command {
+    private name: string;
     constructor(private receiver: Receiver, private args: string) {
         this.receiver = receiver;
         this.args = args;
+        this.name = "";
     }
     ifUndo(): boolean {
         return true;
     }
     undo(): void {
-        this.receiver.deleteBookmark(this.args);
+        this.receiver.deleteBookmark(this.name);
     }
     public execute() {
-        this.receiver.addBookmark(this.args);
+        let devide = this.args.split("$");
+        let folder: string = devide[1];
+        let bmkPart: string = devide[0];
+        let bmkArr: Array<string> = bmkPart.split('@');
+        let url: string = bmkArr[1];
+        let bkName: string = bmkArr[0];
+        this.name = bkName;
+        this.receiver.addBookmark(bkName, url, folder);
     }
 }
+
+//删除书签命令
 class DeleteBookmarkCommand implements Command {
+    private node: Node;
+    private fatherName: string;
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
+        this.title = title;
+        this.node = this.receiver.getNode(title);
+        this.fatherName = "";
     }
     ifUndo(): boolean {
         return true;
     }
     undo(): void {
-        let args: string = this.title + "@" + this.receiver.popUrlStack();
-        args = args + "$" + this.receiver.popFatherStack();
-        this.receiver.addBookmark(args);
-    
+        // let args: string = this.node.getName + "@" + this.node.getStr();
+        // args = args + "$" + this.fatherName;
+        this.receiver.addBookmark(this.node.getName(), this.node.getStr(), this.fatherName);
     }
     public execute() {
-        this.receiver.addFatherStack(this.receiver.getBkTree().getFatherNodeKeyWord(this.title));
-        this.receiver.addUrlStack(this.receiver.getBkTree().getBKUrl(this.title));
+        // this.receiver.addFatherStack(this.receiver.getBkTree().getFatherNodeKeyWord(this.title));
+        // this.receiver.addUrlStack(this.receiver.getBkTree().getBKUrl(this.title));
+        this.fatherName = this.receiver.getFather(this.title);
         this.receiver.deleteBookmark(this.title);
     }
 }
+
 class OpenCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
@@ -273,6 +288,14 @@ class Receiver {
         this.fatherStack = [];
         this.urlStack = [];
     };
+    public getFather(name: string): string{
+        let fatherNode = this.myBkTree.findFatherNode(name)[0];
+        return fatherNode.getName();
+    }
+    public getNode(name: string): Node{
+        let node = this.myBkTree.findNode(name)[0];
+        return node;
+    }
     public getFatherStack(): Array<Catagory> {
         return this.fatherStack;
     }
@@ -305,21 +328,25 @@ class Receiver {
     /**
      * The Cmds receiver receives
      */
-    public addTitle(title: string, father?: string) {
-        this.myBkTree.addNode(new Catagory(title), father);
+    public addTitle(title: string | Node, father?: string) {
+        if (typeof title === 'string') {
+            this.myBkTree.addNode(new Catagory(title), father);
+        } else {
+            this.myBkTree.addNode(title, father);
+        }
     }
 
     public deleteTitle(title: string) {
         this.myBkTree.deleteNode(new Catagory(title));
     }
 
-    public addBookmark(args: string) {
-        let devide = args.split("$");
-        let folder: string = devide[1];
-        let bmkPart: string = devide[0];
-        let bmkArr: Array<string> = bmkPart.split('@');
-        let url: string = bmkArr[1];
-        let bkName: string = bmkArr[0];
+    public addBookmark(bkName: string, url: string, folder: string) {
+        // let devide = args.split("$");
+        // let folder: string = devide[1];
+        // let bmkPart: string = devide[0];
+        // let bmkArr: Array<string> = bmkPart.split('@');
+        // let url: string = bmkArr[1];
+        // let bkName: string = bmkArr[0];
         this.myBkTree.addNode(new Bookmark(bkName, url), folder);
     }
 
@@ -375,7 +402,8 @@ class CommandPool {
     public sendCommand(thecmd: string, args: string): void {
 
         // 创建具体命令对象cmd并设定它的接受者
-        let cmd: Command = new ConcreteCommand(this.receiver);
+        // let cmd: Command = new ConcreteCommand(this.receiver);
+        let cmd: Command = new EmptyCommand();
         switch (thecmd) {
             case "addTitle":
                 cmd = new AddTitleCommand(this.receiver, args);
@@ -415,10 +443,9 @@ class CommandPool {
                 cmd = new ReadBookmarkCommand(this.receiver, args);
                 break;
             default:
-                cmd = new ConcreteCommand(this.receiver);
+                cmd = new EmptyCommand();
                 break;
         }
-
         this.invoker.call(cmd);
     };
 
@@ -438,17 +465,24 @@ function testCommand() {
     console.log("*********************************");
 
     cmp.sendCommand("addTitle", "嗷嗷");
+    cmp.sendCommand("addTitle", "bbat嗷嗷");
     cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("undo", "null");
+    // cmp.sendCommand("showTree", "null");
     cmp.sendCommand("deleteTitle", "嗷嗷");
     cmp.sendCommand("showTree", "null");
     cmp.sendCommand("undo", "null");
     cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("redo", "null");
-    cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("addBookmark", "百度@www.baidu.com$面向对象");
-    cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("deleteBookmark", "百度");
-    cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("redo", "null");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("addBookmark", "aa@www.baidu.com$面向对象");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("undo", "null");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("deleteBookmark", "aa");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("undo", "null");
+    // cmp.sendCommand("showTree", "null");
 
     // cmp.sendCommand("addTitle", "嗷嗷");
     // cmp.sendCommand("showTree", "null");
@@ -469,4 +503,4 @@ function testCommand() {
     // cmp.sendCommand("save","null");
     // cmp.sendCommand("showTree","null");
 }
-// testCommand();
+testCommand();
