@@ -94,7 +94,24 @@ class BookmarkTree implements Tree{
         }
         return fahterArr;
     }
-
+    /**
+     * 获取爹名
+     * @param keyword 儿子名
+     * @returns 爹名
+     */
+    public getFatherNodeKeyWord(keyword:string):string{
+        let father = this.findFatherNode(keyword)[0];
+        return father.getName();
+    }
+    /**
+     * 返回书签对应url
+     * @param keyword 书签名
+     * @returns 书签url
+     */
+    public getBKUrl(keyword:string){
+        let node = this.findNode(keyword)[0];
+        return node.getStr();
+    }
     /**
      * 向树中添加结点
      * @param node 要添加的结点
