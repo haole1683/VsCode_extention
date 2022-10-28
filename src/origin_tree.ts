@@ -1,3 +1,5 @@
+// 原始文件，已废弃
+
 import { assert } from "console";
 import { TargetTree, AdapterFromTreeToFile } from "./adapter";
 import { FileOperation } from "./fileOps";
