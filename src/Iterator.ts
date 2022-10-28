@@ -1,5 +1,6 @@
 import { Node, Catagory, Bookmark, Folder, File } from "./node";
 import { Tree, BookmarkTree, FileTree } from "./tree";
+export { TreeIterator };
 
 interface Iterators {
     hasNext(): Boolean;
@@ -7,13 +8,13 @@ interface Iterators {
 }
 
 class TreeIterator implements Iterators {
-    private tree: Tree;
+    private root: Node;
     private seq: Array<Node>;
     private depth: Array<number>;
     private index: number;
 
-    constructor(tree: Tree, method: string) {
-        this.tree = tree;
+    constructor(root: Node, method: string) {
+        this.root = root;
         this.seq = [];
         this.depth = [];
         this.index = 0;
@@ -23,7 +24,7 @@ class TreeIterator implements Iterators {
 
     private getLevelSequence(): void {
         let myQueue: Array<Node> = [];
-        myQueue.push(this.tree.getRoot());
+        myQueue.push(this.root);
         while (myQueue.length > 0) {
             let curNode = myQueue.shift();
             if (curNode !== undefined) {
@@ -37,7 +38,7 @@ class TreeIterator implements Iterators {
     }
 
     private preOrder(node: Node, deep: number): void {
-        if (node !== this.tree.getRoot()) { 
+        if (node !== this.root) { 
             this.seq.push(node); 
             this.depth.push(deep);
         }
@@ -47,7 +48,7 @@ class TreeIterator implements Iterators {
     }
 
     private getPreSequence(): void {
-        this.preOrder(this.tree.getRoot(), 0);
+        this.preOrder(this.root, 0);
     }
 
     public hasNext(): Boolean {
@@ -61,22 +62,22 @@ class TreeIterator implements Iterators {
 }
 
 
-function testIterator(){
-    let myTree = new BookmarkTree();
-    let myLevelIter = new TreeIterator(myTree,"level");
-    while(myLevelIter.hasNext()){
-        let tmpNode = myLevelIter.next()[0];
-        console.log(tmpNode.getStr());
-    }
-    console.log("\n\n\n\n");
-    let myPreIter = new TreeIterator(myTree,"pre");
-    while(myPreIter.hasNext()){
-        let tmpArr = myPreIter.next();
-        let tmpNode = tmpArr[0];
-        let tmpDepth = tmpArr[1];
-        console.log(tmpNode.getStr());
-        console.log(tmpDepth);
-    }
-}
+// function testIterator(){
+//     let myTree = new BookmarkTree();
+//     let myLevelIter = new TreeIterator(myTree,"level");
+//     while(myLevelIter.hasNext()){
+//         let tmpNode = myLevelIter.next()[0];
+//         console.log(tmpNode.getStr());
+//     }
+//     console.log("\n\n\n\n");
+//     let myPreIter = new TreeIterator(myTree,"pre");
+//     while(myPreIter.hasNext()){
+//         let tmpArr = myPreIter.next();
+//         let tmpNode = tmpArr[0];
+//         let tmpDepth = tmpArr[1];
+//         console.log(tmpNode.getStr());
+//         console.log(tmpDepth);
+//     }
+// }
 
 // testIterator();
