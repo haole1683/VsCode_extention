@@ -159,7 +159,7 @@ class DeleteBookmarkCommand implements Command {
     undo(): void {
         // let args: string = this.node.getName + "@" + this.node.getStr();
         // args = args + "$" + this.fatherName;
-        this.receiver.addBookmark(this.node.getName(), this.node.getStr(), this.fatherName);
+        this.receiver.addBookmark(this.node.getName(), this.node.getUrl(), this.fatherName);
     }
     public execute() {
         // this.receiver.addFatherStack(this.receiver.getBkTree().getFatherNodeKeyWord(this.title));

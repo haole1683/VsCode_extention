@@ -12,6 +12,7 @@ interface Node{
     setChildren(children:Array<Node>):void;
 
     getStr():string;
+    getUrl(): string;
 }
 
 class Catagory implements Node{
@@ -55,6 +56,10 @@ class Catagory implements Node{
     
     public getStr(): string {
         return this.name;
+    }
+
+    public getUrl(): string {
+        return "";
     }
 }
 
@@ -107,7 +112,7 @@ class Bookmark implements Node{
         return;
     }
     public getStr(): string {
-        return this.url;
+        return `[${this.name}](${this.url})`;
     }
 }
 
@@ -149,6 +154,9 @@ class Folder implements Node{
     public getStr(): string {
         return this.name;
     }
+    public getUrl(): string {
+        return "";
+    }
 }
 
 class File implements Node{
@@ -176,6 +184,9 @@ class File implements Node{
     }
     public getStr(): string {
         return this.name;
+    }
+    public getUrl(): string {
+        return "";
     }
 }
 

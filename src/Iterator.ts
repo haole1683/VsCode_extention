@@ -4,7 +4,7 @@ export { TreeIterator };
 
 interface Iterators {
     hasNext(): Boolean;
-    next(): [Node, Number];
+    next(): [Node, number];
 }
 
 class TreeIterator implements Iterators {
@@ -38,17 +38,15 @@ class TreeIterator implements Iterators {
     }
 
     private preOrder(node: Node, deep: number): void {
-        if (node !== this.root) { 
-            this.seq.push(node); 
-            this.depth.push(deep);
-        }
-        node?.getChildren().forEach( (son) => {
+        this.seq.push(node);
+        this.depth.push(deep);
+        node?.getChildren().forEach((son) => {
             this.preOrder(son, deep + 1);
         });
     }
 
     private getPreSequence(): void {
-        this.preOrder(this.root, 0);
+        this.preOrder(this.root, 1);
     }
 
     public hasNext(): Boolean {
@@ -56,7 +54,7 @@ class TreeIterator implements Iterators {
         else { return false; }
     }
 
-    public next():[Node, Number] {
+    public next(): [Node, number] {
         return [this.seq[this.index], this.depth[this.index++]];
     }
 }
