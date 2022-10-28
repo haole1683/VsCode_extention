@@ -350,7 +350,7 @@ class Receiver {
     }
 
     public readBookmark(title: string) {
-        // this.myBkTree.readBookmark(title);
+        this.myBkTree.readBookmark(title);
     }
 
     public getData(): string {
