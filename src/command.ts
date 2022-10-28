@@ -428,7 +428,6 @@ class CommandPool {
     public getFileStructure(): string {
         return this.receiver.lsTree();
     }
-
 }
 
 
