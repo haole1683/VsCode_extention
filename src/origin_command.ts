@@ -5,7 +5,7 @@
 
 export { CommandPool };
 import { TargetCmd, AdapterFromCmdToTree } from "./adapter";
-import { Tree } from "./tree";
+import { Tree } from "./origin_tree";
 
 
 //调用者

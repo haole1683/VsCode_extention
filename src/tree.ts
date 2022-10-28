@@ -20,12 +20,14 @@ interface Tree{
 class BookmarkTree implements Tree{
     private root:Node;
     private path:string;
-
+    private bookmarkMap: Map<string,number>;
     constructor(){
         this.root = new Catagory("个人收藏");
+        this.bookmarkMap = new Map<string,number>;
         this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk";
         this.read(this.path);
     };
+
 
     // 树基本属性get set
     public getRoot():Node{
@@ -65,7 +67,6 @@ class BookmarkTree implements Tree{
         }
         return res;
     }
-
     /**
      * 找到关键字结点父亲
      * Tip：可能有多个相同名字的结点，因此返回的是Array<Node>，如果只想获取一个结点，直接索引[0]即可
@@ -125,7 +126,6 @@ class BookmarkTree implements Tree{
             father.addChild(node);
         }
     }
-
     /**
      * 删除树中与node关键字相同的结点
      * @param node 将要删除的结点
@@ -169,7 +169,7 @@ class BookmarkTree implements Tree{
     }
 
 
-    // 获取树格式化字符串
+    // 获取树格式化字符串相关
     /**递归辅助函数 */
     private getArrayOfTreeWIthRecrusion(curNode: Node, curDepth: number, myNodearr: Array<Node>, myStrArr: Array<string>, myDepthArr: Array<number>): void {
         if (curNode !== null) {
@@ -249,6 +249,98 @@ class BookmarkTree implements Tree{
         let str:string = this.getFileFormatContent();
         console.log(str);
     }
+    /**
+     * 获取文件格式内容字符串，带有读取次数信息
+     * @returns 对应字符串
+     */
+    public getFileFormatContent2(): string {
+        let depth = 1;
+
+        let allArr: { nodeArr: Array<Node>, strArr: Array<string>, depthArr: Array<number> } = this.getArrayOfTree();
+        let myNodeArr: Array<Node> = allArr.nodeArr;
+        let myStrArr: Array<string> = allArr.strArr;
+        let myDepthArr: Array<number> = allArr.depthArr;
+        let myPrintArray: Array<string> = [];
+        assert(myStrArr.length === myStrArr.length);
+
+        for (let i = 0; i < myStrArr.length; i++) {
+            if (myDepthArr[i] === -1) {
+                // 叶结点  书签结点
+                let devidedStr = myStrArr[i].split("|");
+                let bkName = devidedStr[0];
+                let bkUrl = devidedStr[1];
+                let num = this.bookmarkMap.get(bkName);
+                if(num === undefined){
+                    myPrintArray.push(`[${bkName}](${bkUrl})`);
+                }else{
+                    myPrintArray.push(`[*${bkName}[${num}]](${bkUrl})`);
+                }
+                
+            } else {
+                let depth = myDepthArr[i];
+                let strSharp = this.getStrOfNSharp(depth);
+                myPrintArray.push(`${strSharp} ${myStrArr[i]}`);
+            }
+        }
+        let retStr: string = "";
+        myPrintArray.forEach(function (str) {
+            retStr += (str + "\n");
+        });
+        return retStr;
+    }
+    private lsTreeHelper(node:Node,level:number,printString:Array<string>):void{
+        let fName = node.getName();
+        if(level === 0){
+            printString.push(fName);
+        }else{
+            let strPrint:string="";
+            for(let i=0;i<level;i++){
+                strPrint += "---";
+            }
+            printString.push(strPrint +"--├" + fName);
+        }
+        let nodeArr:Array<Node> = node.getChildren();
+        for(let i =0;i<nodeArr.length;i++){
+            this.lsTreeHelper(nodeArr[i],level+1,printString);
+        }
+        
+        
+    }
+    /**
+     * 获取打印字符串
+     * @returns 字符串
+     */
+    private lsTreeString() :string{
+        let printString:Array<string> = [];
+        this.lsTreeHelper(this.root,0,printString);
+        let retStr:string = "";
+        printString.forEach(function(str){
+            retStr += (str+"\n");
+        });
+        return retStr;
+    }
+    /**
+     * 获取树形打印输出
+     * @returns 字符串
+     */
+    public getLsTreeString():string{
+        return this.lsTreeString();
+    }
+
+
+    // Bookmark读取
+    /**
+     * 读取bk，将其读取次数+1
+     * @param title bookmark名称
+     */
+    public readBookmark(title:string) {
+        let num = this.bookmarkMap.get(title);
+        if(num === undefined){
+            this.bookmarkMap.set(title,1);
+        }else{
+            this.bookmarkMap.set(title,num+1);
+        }
+    }
 
     
     // 文件导入以及写出
@@ -308,10 +400,12 @@ class BookmarkTree implements Tree{
         myTree.writeToFile(str);
     }
 
+
     // 迭代器
     public getIterator(): Iterable<Node> {
         throw new Error("Method not implemented.");
     }
+
 
     /**
      * 清除内存中树
@@ -329,7 +423,7 @@ class FileTree implements Tree{
     constructor(path:string){
         this.root = new Folder("base");
         this.path = path;
-        this.read();
+        this.read(this.path);
     }
 
     // 基本get set属性处理
@@ -459,7 +553,8 @@ class FileTree implements Tree{
     /**
      * 根据当前path，读取path下文件结构到当前树中
      */
-    public read(): void {
+    public read(path:string): void {
+        this.path = path;
         this.readHelper(this.root,this.path);  
     }
     /**
@@ -493,7 +588,7 @@ class FileTree implements Tree{
      * 获取打印字符串
      * @returns 字符串
      */
-    private lsTreeString() :string{
+    public lsTreeString() :string{
         let printString:Array<string> = [];
         this.lsTreeHelper(this.root,0,printString);
         let retStr:string = "";

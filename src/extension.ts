@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import axios from 'axios';
 import * as  fs from "fs";
 import { MyTreeData } from './myTreeData';
-import { CommandPool } from './origin_command';
+import { CommandPool } from './command';
 
 
 // this method is called when your extension is activated
@@ -244,7 +244,7 @@ export async function activate(context: vscode.ExtensionContext) {
         }
         console.log(inputwindow);
         if (inputwindow !== undefined) {
-            commandPool.sendCommand("deleteTitle", inputwindow);
+            commandPool.sendCommand("deleteBookmark", inputwindow);
         }
     });
     context.subscriptions.push(deleteBookmarkCmd);

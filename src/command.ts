@@ -7,7 +7,7 @@ export { CommandPool };
 import path = require("path");
 import { FactoryProducer } from "./Factory";
 import { Bookmark, Catagory } from "./node";
-import { BookmarkTree } from "./tree";
+import { BookmarkTree, FileTree } from "./tree";
 
 //调用者
 class Invoker {
@@ -154,8 +154,8 @@ class DeleteBookmarkCommand implements Command {
     
     }
     public execute() {
-        this.receiver.addFatherStack(this.receiver.getBkTree().findFatherNode(this.title)[0].getName());
-        this.receiver.addUrlStack(this.receiver.getBkTree().findFatherNode(this.title)[0].getStr());
+        this.receiver.addFatherStack(this.receiver.getBkTree().getFatherNodeKeyWord(this.title));
+        this.receiver.addUrlStack(this.receiver.getBkTree().getBKUrl(this.title));
         this.receiver.deleteBookmark(this.title);
     }
 }
@@ -262,11 +262,14 @@ class ReadBookmarkCommand implements Command {
 //接收者
 class Receiver {
     private myBkTree: BookmarkTree;
+    private myFileTree: FileTree;
     private fatherStack: Array<Catagory>;
     private urlStack: Array<string>;
     constructor() {
         let bkTreeFactoryProduct = new FactoryProducer().getBookmarkFactory();
         this.myBkTree = bkTreeFactoryProduct.getTree();
+        let fileTreeFactoryProduct = new FactoryProducer().getFileFactory();
+        this.myFileTree = fileTreeFactoryProduct.getTree();
         this.fatherStack = [];
         this.urlStack = [];
     };
@@ -321,12 +324,13 @@ class Receiver {
     }
 
     public deleteBookmark(args: string) {
-        this.myBkTree.deleteNode(new Catagory(args));
+        this.myBkTree.deleteNode(new Bookmark(args,""));
     }
 
     public open(filePath: string) {
         console.log("Path is", filePath);
         this.myBkTree.read(filePath);
+        this.myFileTree.read(filePath);
     }
 
     public save() {
@@ -337,8 +341,12 @@ class Receiver {
         this.myBkTree.printTree();
     }
 
-    public lsTree() {
-        // this.myBkTree.lsTree();
+    public lsShowTree() {
+        return this.myBkTree.getLsTreeString();
+    }
+
+    public lsTree(){
+        return this.myFileTree.lsTreeString();
     }
 
     public readBookmark(title: string) {
@@ -347,11 +355,6 @@ class Receiver {
 
     public getData(): string {
         return this.myBkTree.getFileFormatContent();
-    }
-
-    public getFileStructure(): string {
-        // return this.myCmd.getFileStructure();
-        return "";
     }
 }
 
@@ -423,7 +426,7 @@ class CommandPool {
         return this.receiver.getData();
     }
     public getFileStructure(): string {
-        return this.receiver.getFileStructure();
+        return this.receiver.lsTree();
     }
 
 }
@@ -466,4 +469,4 @@ function testCommand() {
     // cmp.sendCommand("save","null");
     // cmp.sendCommand("showTree","null");
 }
-testCommand();
+// testCommand();
