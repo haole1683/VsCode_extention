@@ -356,6 +356,7 @@ class Receiver {
     //打开文件
     public open(filePath: string) {
         console.log("Path is", filePath);
+        this.myBkTree.clear();
         this.myBkTree.read(filePath);
         this.myFileTree.read(filePath);
     }
@@ -373,7 +374,7 @@ class Receiver {
     // }
     //展示文件树
     public lsTree(){
-        return this.myFileTree.lsTreeString();
+        return this.myFileTree.printlsTree();
     }
     //阅读书签
     public readBookmark(title: string) {
@@ -461,15 +462,16 @@ function testCommand() {
     let cmp: CommandPool = new CommandPool();
     console.log("*********************************");
 
-    cmp.sendCommand("addTitle", "嗷嗷");
-    cmp.sendCommand("addTitle", "bbat嗷嗷");
-    cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("addTitle", "嗷嗷");
+    // cmp.sendCommand("addTitle", "bbat嗷嗷");
+    // cmp.sendCommand("showTree", "null");
     // cmp.sendCommand("undo", "null");
     // cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("deleteTitle", "嗷嗷");
-    cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("undo", "null");
-    cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("deleteTitle", "嗷嗷");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("undo", "null");
+    // cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("lsTree", "null");
     // cmp.sendCommand("redo", "null");
     // cmp.sendCommand("showTree", "null");
     // cmp.sendCommand("addBookmark", "aa@www.baidu.com$面向对象");

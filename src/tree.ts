@@ -469,7 +469,8 @@ class FileTree implements Tree {
     constructor(path?: string) {
         this.root = new Folder("base");
         if (path === undefined) {
-            this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files";
+            // this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files";
+            this.path = "/Users/leizhe/code/lab/VsCode_extention/files";
         } else {
             this.path = path;
         }
@@ -600,9 +601,11 @@ class FileTree implements Tree {
      */
     private getPathAndName(path: string): Array<string> {
         let filePath: string = path;
-        let devidedStr: Array<string> = filePath.split("\\");
+        // let devidedStr: Array<string> = filePath.split("\\");
+        let devidedStr: Array<string> = filePath.split("/");
         let fileName: string = devidedStr[devidedStr.length - 1];
         let fileDir = filePath.substring(0, filePath.length - fileName.length - 1);
+        // console.log(fileDir);
         return [fileDir, fileName];
     }
     private readHelper(father: Node, fpath: string): void {
