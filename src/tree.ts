@@ -1,7 +1,7 @@
 import * as  fs from "fs";
 import * as  path from "path";
 import assert = require("assert");
-import { AdapterFromTreeToFile, TargetTree } from "./adapter";
+// import { AdapterFromTreeToFile, TargetTree } from "./adapter";
 import { FileOperation } from "./fileOps";
 import { Node, Catagory, Bookmark, Folder, File } from "./node";
 import { TreeIterator } from "./Iterator";
@@ -498,21 +498,28 @@ class FileTree implements Tree {
      * @param {string} keyword: 关键字keyword
      * @return 关键字结点的数组
      */
-    public findNode(keyword: string): Array<Node> {
+     public findNode(keyword: string): Array<Node> {
         let res: Array<Node> = [];
-        let myQueue: Array<Node> = [];
-        myQueue.push(this.root);
-        while (myQueue.length > 0) {
-            let curNode = myQueue.shift();
-            if (curNode !== undefined) {
-                let curName = curNode.getName();
-                if (curName === keyword) {
-                    res.push(curNode);
-                }
+        let treeLevelIterator = new TreeIterator(this.root, "level");
+        // let myQueue: Array<Node> = [];
+        // myQueue.push(this.root);
+        // while (myQueue.length > 0) {
+        //     let curNode = myQueue.shift();
+        //     if (curNode !== undefined) {
+        //         let curName = curNode.getName();
+        //         if (curName === keyword) {
+        //             res.push(curNode);
+        //         }
+        //     }
+        //     curNode?.getChildren().forEach(function (son) {
+        //         myQueue.push(son);
+        //     });
+        // }
+        while (treeLevelIterator.hasNext()) {
+            let tmpNode = treeLevelIterator.next()[0];
+            if (tmpNode.getName() === keyword) {
+                res.push(tmpNode);
             }
-            curNode?.getChildren().forEach(function (son) {
-                myQueue.push(son);
-            });
         }
         return res;
     }
@@ -523,28 +530,23 @@ class FileTree implements Tree {
      * @param keyword 结点关键字
      * @returns 该节点父亲
      */
-    public findFatherNode(keyword: string): Array<Node> {
-        let myQueue: Array<Node> = [];
+     public findFatherNode(keyword: string): Array<Node> {
+        // let myQueue: Array<Node> = [];
         let fahterArr: Array<Node> = [];
-        myQueue.push(this.root);
-        while (myQueue.length > 0) {
-            let curNode = myQueue.shift();
-
-            if (curNode !== undefined) {
-                curNode.getChildren().forEach(function (son) {
+        // myQueue.push(this.root);
+        let treeLevelIterator = new TreeIterator(this.root, "level");
+        while (treeLevelIterator.hasNext()) {
+            let tmpNode = treeLevelIterator.next()[0];
+            if (tmpNode !== undefined) {
+                tmpNode.getChildren().forEach(function (son) {
                     if (son !== undefined) {
-                        if (son.getName() === keyword && curNode !== undefined) {
-                            fahterArr.push(curNode);
+                        if (son.getName() === keyword && tmpNode !== undefined) {
+                            fahterArr.push(tmpNode);
                         }
                     }
                 });
             }
-            curNode?.getChildren().forEach(function (son) {
-                myQueue.push(son);
-            });
         }
-        return fahterArr;
-    }
 
     /**
      * 向树中添加结点
