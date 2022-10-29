@@ -547,6 +547,24 @@ class FileTree implements Tree {
                 });
             }
         }
+        // while (myQueue.length > 0) {
+        //     let curNode = myQueue.shift();
+
+        //     if (curNode !== undefined) {
+        //         curNode.getChildren().forEach(function (son) {
+        //             if (son !== undefined) {
+        //                 if (son.getName() === keyword && curNode !== undefined) {
+        //                     fahterArr.push(curNode);
+        //                 }
+        //             }
+        //         });
+        //     }
+        //     curNode?.getChildren().forEach(function (son) {
+        //         myQueue.push(son);
+        //     });
+        // }
+        return fahterArr;
+    }
 
     /**
      * 向树中添加结点
