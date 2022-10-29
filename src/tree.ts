@@ -378,12 +378,16 @@ class BookmarkTree implements Tree {
      * @param title bookmark名称
      */
     public readBookmark(title: string) {
-        let num = this.bookmarkMap.get(title);
-        if (num === undefined) {
-            this.bookmarkMap.set(title, 1);
-        } else {
-            this.bookmarkMap.set(title, num + 1);
+        let node = this.findNode(title)[0];
+        if(node instanceof Bookmark) {
+            node.addReadNum();
         }
+        // let num = this.bookmarkMap.get(title);
+        // if (num === undefined) {
+        //     this.bookmarkMap.set(title, 1);
+        // } else {
+        //     this.bookmarkMap.set(title, num + 1);
+        // }
     }
 
 

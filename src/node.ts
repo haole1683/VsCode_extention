@@ -1,48 +1,48 @@
-export {Node,Catagory,Bookmark,Folder,File};
+export { Node, Catagory, Bookmark, Folder, File };
 
-interface Node{
-    
-    getName():string;
-    setName(name:string):void;
+interface Node {
 
-    addChild(son:Node):void;
-    deleteChild(son:Node):void;
+    getName(): string;
+    setName(name: string): void;
 
-    getChildren():Array<Node>;
-    setChildren(children:Array<Node>):void;
+    addChild(son: Node): void;
+    deleteChild(son: Node): void;
 
-    getStr():string;
+    getChildren(): Array<Node>;
+    setChildren(children: Array<Node>): void;
+
+    getStr(): string;
     getUrl(): string;
 }
 
-class Catagory implements Node{
+class Catagory implements Node {
     private name: string; // 目录（书签）名称额
     private children: Array<Node>;   // 儿子结点 
 
-    constructor(name:string){
+    constructor(name: string) {
         this.name = name;
         this.children = Array<Node>();
     }
 
-    public getName(): string{
+    public getName(): string {
         return this.name;
     }
-    public setName(name:string): void{
+    public setName(name: string): void {
         this.name = name;
     }
 
-    public addChild(son:Node): void {
+    public addChild(son: Node): void {
         this.children.push(son);
     }
     public deleteChild(son: Node): void {
-        let sonName:string = son.getName();
+        let sonName: string = son.getName();
         let i = -1;
         for (i = 0; i < this.children.length; i++) {
             if (this.children[i].getName() === sonName) {
                 break;
             }
         }
-        if (i === -1) { 
+        if (i === -1) {
             return;
         }
         this.children.splice(i, 1);
@@ -53,7 +53,7 @@ class Catagory implements Node{
     public setChildren(children: Array<Node>): void {
         this.children = children;
     }
-    
+
     public getStr(): string {
         return this.name;
     }
@@ -63,43 +63,43 @@ class Catagory implements Node{
     }
 }
 
-class Bookmark implements Node{
+class Bookmark implements Node {
     private name: string; // 目录（书签）名称额
-    private readNum: number; 
-    private url:string;
+    private readNum: number;
+    private url: string;
 
-    constructor(name:string,url:string){
+    constructor(name: string, url: string) {
         this.name = name;
         this.readNum = 0;
         this.url = url;
     }
 
     // 基本属性set get
-    public getName(): string{
+    public getName(): string {
         return this.name;
     }
-    public setName(name:string): void{
+    public setName(name: string): void {
         this.name = name;
     }
-    public getReadNum():number{
+    public getReadNum(): number {
         return this.readNum;
     }
-    public setReadNum(num:number){
+    public setReadNum(num: number) {
         this.readNum = num;
     }
-    public addReadNum():void{
+    public addReadNum(): void {
         // 增加阅读次数
         this.readNum++;
     }
-    public setUrl(url:string){
+    public setUrl(url: string) {
         this.url = url;
     }
-    public getUrl():string{
+    public getUrl(): string {
         return this.url;
     }
 
     // 孩子结点处理
-    public addChild(son:Node): void {
+    public addChild(son: Node): void {
         return;
     }
     public deleteChild(son: Node): void {
@@ -116,31 +116,33 @@ class Bookmark implements Node{
     }
 }
 
-class Folder implements Node{
+
+
+class Folder implements Node {
     private name: string; // 目录（书签）名称额
     private children: Array<Node>;   // 儿子结点 
-    constructor(name:string){
+    constructor(name: string) {
         this.name = name;
         this.children = Array<Node>();
     }
-    public getName(): string{
+    public getName(): string {
         return this.name;
     }
-    public setName(name:string): void{
+    public setName(name: string): void {
         this.name = name;
     }
-    public addChild(son:Node): void {
+    public addChild(son: Node): void {
         this.children.push(son);
     }
     public deleteChild(son: Node): void {
-        let sonName:string = son.getName();
+        let sonName: string = son.getName();
         let i = -1;
         for (i = 0; i < this.children.length; i++) {
             if (this.children[i].getName() === sonName) {
                 break;
             }
         }
-        if (i === -1) { 
+        if (i === -1) {
             return;
         }
         this.children.splice(i, 1);
@@ -159,18 +161,18 @@ class Folder implements Node{
     }
 }
 
-class File implements Node{
+class File implements Node {
     private name: string; // 目录（书签）名称额
-    constructor(name:string){
+    constructor(name: string) {
         this.name = name;
     }
-    public getName(): string{
+    public getName(): string {
         return this.name;
     }
-    public setName(name:string): void{
+    public setName(name: string): void {
         this.name = name;
     }
-    public addChild(son:Node): void {
+    public addChild(son: Node): void {
         return;
     }
     public deleteChild(son: Node): void {
@@ -191,9 +193,9 @@ class File implements Node{
 }
 
 
-function testNode(){
-    let myNode:Node = new Bookmark("11","111");
+function testNode() {
+    let myNode: Node = new Bookmark("11", "111");
     console.log(myNode instanceof Folder);
-    
+
 }
 testNode();

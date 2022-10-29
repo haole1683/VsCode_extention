@@ -264,12 +264,12 @@ class LsTreeCommand implements Command {
 class ReadBookmarkCommand implements Command {
     constructor(private receiver: Receiver, private title: string) {
         this.receiver = receiver;
+        this.title = title;
     }
     ifUndo(): boolean {
         return false;
     }
     undo(): void {
-        throw new Error("Method not implemented.");
     }
     public execute() {
         this.receiver.readBookmark(this.title);
@@ -292,12 +292,12 @@ class Receiver {
         // this.urlStack = [];
     };
     //获取父节点
-    public getFather(name: string): string{
+    public getFather(name: string): string {
         let fatherNode = this.myBkTree.findFatherNode(name)[0];
         return fatherNode.getName();
     }
     //获取节点
-    public getNode(name: string): Node{
+    public getNode(name: string): Node {
         let node = this.myBkTree.findNode(name)[0];
         return node;
     }
@@ -351,7 +351,7 @@ class Receiver {
     }
     //删除书签目录
     public deleteBookmark(args: string) {
-        this.myBkTree.deleteNode(new Bookmark(args,""));
+        this.myBkTree.deleteNode(new Bookmark(args, ""));
     }
     //打开文件
     public open(filePath: string) {
@@ -373,7 +373,7 @@ class Receiver {
     //     return this.myBkTree.getLsTreeString();
     // }
     //展示文件树
-    public lsTree(){
+    public lsTree() {
         return this.myFileTree.printlsTree();
     }
     //阅读书签
@@ -471,11 +471,12 @@ function testCommand() {
     // cmp.sendCommand("showTree", "null");
     // cmp.sendCommand("undo", "null");
     // cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("lsTree", "null");
+    // cmp.sendCommand("lsTree", "null");
     // cmp.sendCommand("redo", "null");
     // cmp.sendCommand("showTree", "null");
     // cmp.sendCommand("addBookmark", "aa@www.baidu.com$面向对象");
-    // cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("readBookmark", "elearning");
+    cmp.sendCommand("showTree", "null");
     // cmp.sendCommand("undo", "null");
     // cmp.sendCommand("showTree", "null");
     // cmp.sendCommand("deleteBookmark", "aa");

@@ -1,3 +1,4 @@
+import { BookmarkDecorator } from "./decorator";
 import { BookmarkTree, Tree } from "./tree";
 export { TreePrinter };
 
@@ -26,9 +27,9 @@ class TreePrinter {
                 }
             }
             if (tmpLast === false) {
-                tmpStr += "├" + tmpNode.getStr();
+                tmpStr += "├" + new BookmarkDecorator(tmpNode).getDecoratorStr();
             } else {
-                tmpStr += "└" + tmpNode.getStr();
+                tmpStr += "└" + new BookmarkDecorator(tmpNode).getDecoratorStr();
             }
 
             console.log(tmpStr);
