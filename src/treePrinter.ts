@@ -1,4 +1,5 @@
 import { BookmarkTree, Tree } from "./tree";
+export { TreePrinter };
 
 class TreePrinter {
     private tree: Tree;
@@ -41,4 +42,4 @@ function testTreePrinter(){
     treePrinter.printTree();
 }
 
-testTreePrinter();
+// testTreePrinter();

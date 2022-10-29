@@ -5,7 +5,9 @@ import assert = require("assert");
 import { FileOperation } from "./fileOps";
 import { Node, Catagory, Bookmark, Folder, File } from "./node";
 import { TreeIterator } from "./Iterator";
+import { TreePrinter } from "./treePrinter";
 export { Tree, BookmarkTree, FileTree };
+
 
 
 interface Tree {
@@ -288,8 +290,8 @@ class BookmarkTree implements Tree {
      * 打印树结构，用于调试
      */
     public printTree(): void {
-        let str: string = this.getSaveContent();
-        console.log(str);
+        let treePrinter = new TreePrinter(this);
+        treePrinter.printTree();
     }
     /**
      * 获取文件格式内容字符串，带有读取次数信息
@@ -352,22 +354,22 @@ class BookmarkTree implements Tree {
      * 获取打印字符串
      * @returns 字符串
      */
-    private lsTreeString(): string {
-        let printString: Array<string> = [];
-        this.lsTreeHelper(this.root, 0, printString);
-        let retStr: string = "";
-        printString.forEach(function (str) {
-            retStr += (str + "\n");
-        });
-        return retStr;
-    }
+    // private lsTreeString(): string {
+    //     let printString: Array<string> = [];
+    //     this.lsTreeHelper(this.root, 0, printString);
+    //     let retStr: string = "";
+    //     printString.forEach(function (str) {
+    //         retStr += (str + "\n");
+    //     });
+    //     return retStr;
+    // }
     /**
      * 获取树形打印输出
      * @returns 字符串
      */
-    public getLsTreeString(): string {
-        return this.lsTreeString();
-    }
+    // public getLsTreeString(): string {
+    //     return this.lsTreeString();
+    // }
 
 
     // Bookmark读取
@@ -640,47 +642,48 @@ class FileTree implements Tree {
 
 
     // 文件目录显示输出相关
-    private lsTreeHelper(node: Node, level: number, printString: Array<string>): void {
-        let fName = node.getName();
-        if (level === 0) {
-            printString.push(fName);
-        } else {
-            let strPrint: string = "";
-            for (let i = 0; i < level; i++) {
-                strPrint += " ";
-            }
-            printString.push(strPrint + "├" + fName);
-        }
-        let nodeArr: Array<Node> = node.getChildren();
-        for (let i = 0; i < nodeArr.length; i++) {
-            this.lsTreeHelper(nodeArr[i], level + 1, printString);
-        }
+    // private lsTreeHelper(node: Node, level: number, printString: Array<string>): void {
+    //     let fName = node.getName();
+    //     if (level === 0) {
+    //         printString.push(fName);
+    //     } else {
+    //         let strPrint: string = "";
+    //         for (let i = 0; i < level; i++) {
+    //             strPrint += " ";
+    //         }
+    //         printString.push(strPrint + "├" + fName);
+    //     }
+    //     let nodeArr: Array<Node> = node.getChildren();
+    //     for (let i = 0; i < nodeArr.length; i++) {
+    //         this.lsTreeHelper(nodeArr[i], level + 1, printString);
+    //     }
 
 
-    }
+    // }
     /**
      * 获取打印字符串
      * @returns 字符串
      */
-    public lsTreeString(): string {
-        let printString: Array<string> = [];
-        this.lsTreeHelper(this.root, 0, printString);
-        let retStr: string = "";
-        printString.forEach(function (str) {
-            retStr += (str + "\n");
-        });
-        return retStr;
-    }
+    // public lsTreeString(): string {
+    //     let printString: Array<string> = [];
+    //     this.lsTreeHelper(this.root, 0, printString);
+    //     let retStr: string = "";
+    //     printString.forEach(function (str) {
+    //         retStr += (str + "\n");
+    //     });
+    //     return retStr;
+    // }
     /**
      * console.log 输出打印，用于调试
      */
     public printlsTree(): void {
-        let str: string = this.lsTreeString();
-        console.log(str);
+        let treePrinter = new TreePrinter(this);
+        treePrinter.printTree();
     }
 
     public getIterator(method: string): TreeIterator {
-        throw new Error("Method not implemented.");
+        if (method === "level") { return new TreeIterator(this.root, "level"); }
+        else { return new TreeIterator(this.root, "pre"); }
     }
 
     /**
