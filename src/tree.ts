@@ -278,10 +278,9 @@ class BookmarkTree implements Tree {
 
             if (tmpNode instanceof Catagory) {
                 retStr += this.getStrOfNSharp(tmpDepth);
-                console.log("+++++" + tmpDepth);
-                retStr += (tmpNode.getStr() + "\n");
+                retStr += (" " + tmpNode.getStr() + "\n");
             } else {
-                retStr += (tmpNode.getStr() + "\n");
+                retStr += (" " + tmpNode.getStr() + "\n");
             }
         }
         return retStr;

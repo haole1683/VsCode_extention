@@ -66,23 +66,25 @@ class EmptyCommand implements Command {
 
 //添加书签目录命令
 class AddTitleCommand implements Command {
+    private name: string;
     constructor(private receiver: Receiver, private args: string) {
         this.receiver = receiver;
         this.args = args;
+        this.name = "";
     }
     ifUndo(): boolean {
         return true;
     }
     undo(): void {
-        this.receiver.deleteTitle(this.args);
+        this.receiver.deleteTitle(this.name);
     }
     public execute() {
         if (this.args.includes("at")) {
             let devided = this.args.split("at");
-            let name = devided[0];
+            this.name = devided[0];
             let folder = devided[1];
             // this.receiver.addFatherStack(folder);
-            this.receiver.addTitle(name, folder);
+            this.receiver.addTitle(this.name, folder);
         } else {
             // this.receiver.addFatherStack("个人收藏");
             this.receiver.addTitle(this.args);
@@ -462,21 +464,37 @@ function testCommand() {
     let cmp: CommandPool = new CommandPool();
     console.log("*********************************");
 
-    // cmp.sendCommand("addTitle", "嗷嗷");
-    // cmp.sendCommand("addTitle", "bbat嗷嗷");
-    // cmp.sendCommand("showTree", "null");
-    // cmp.sendCommand("undo", "null");
-    // cmp.sendCommand("showTree", "null");
-    // cmp.sendCommand("deleteTitle", "嗷嗷");
-    // cmp.sendCommand("showTree", "null");
-    // cmp.sendCommand("undo", "null");
-    // cmp.sendCommand("showTree", "null");
-    // cmp.sendCommand("lsTree", "null");
-    // cmp.sendCommand("redo", "null");
-    // cmp.sendCommand("showTree", "null");
-    // cmp.sendCommand("addBookmark", "aa@www.baidu.com$面向对象");
+    cmp.sendCommand("addTitle", "嗷嗷");
+    cmp.sendCommand("addTitle", "bbat嗷嗷");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("undo", "null");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("undo", "null");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("addBookmark", "aa@www.baidu.com$面向对象");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("undo", "null");
+    cmp.sendCommand("showTree", "null");
     cmp.sendCommand("readBookmark", "elearning");
     cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("deleteTitle", "面向对象");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("undo", "null");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("redo", "null");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("readBookmark", "elearning");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("open", "/Users/leizhe/code/lab/VsCode_extention/files/2.bmk");
+    cmp.sendCommand("showTree", "null");
+    cmp.sendCommand("addTitle", "嗷嗷");
+    cmp.sendCommand("save", "null");
+    cmp.sendCommand("lsTree", "null");
+
+
+
+
+
     // cmp.sendCommand("undo", "null");
     // cmp.sendCommand("showTree", "null");
     // cmp.sendCommand("deleteBookmark", "aa");
