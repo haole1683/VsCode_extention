@@ -389,8 +389,6 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(lsTreeCmd);
 
     let readBookmarkCmd = vscode.commands.registerCommand('case2script.readBookmark', async () => {
-        // The code you place here will be executed every time your command is executed
-        // Display a message box to the user
         let inputwindow = await vscode.window.showInputBox();
         while (inputwindow === undefined) {
             vscode.window.showInformationMessage("You input is empty");
