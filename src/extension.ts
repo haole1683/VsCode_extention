@@ -281,8 +281,6 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(deleteBookmarkCmd);
 
     let openCmd = vscode.commands.registerCommand('case2script.open', async () => {
-        // The code you place here will be executed every time your command is executed
-        // Display a message box to the user
         let inputwindow = await vscode.window.showInputBox();
         while (inputwindow === undefined) {
             vscode.window.showInformationMessage("You input is empty");
@@ -296,8 +294,6 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(openCmd);
 
     let bookmarkCMd = vscode.commands.registerCommand('case2script.bookmark', async () => {
-        // The code you place here will be executed every time your command is executed
-        // Display a message box to the user
         let inputwindow = await vscode.window.showInputBox();
         while (inputwindow === undefined) {
             vscode.window.showInformationMessage("You input is empty");
@@ -311,8 +307,6 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(bookmarkCMd);
 
     let editCmd = vscode.commands.registerCommand('case2script.edit', async () => {
-        // The code you place here will be executed every time your command is executed
-        // Display a message box to the user
         let inputwindow = await vscode.window.showInputBox();
         while (inputwindow === undefined) {
             vscode.window.showInformationMessage("You input is empty");
@@ -341,7 +335,6 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(redoCmd);
 
     let showTreeCmd = vscode.commands.registerCommand('case2script.showTree', async () => {
-        // commandPool.sendCommand("showTree", "null");
         const panel = vscode.window.createWebviewPanel(
             'webPage',
             "Working On",
@@ -356,15 +349,20 @@ export async function activate(context: vscode.ExtensionContext) {
             }
         );
         let dataStr: string = commandPool.getData();
+        console.log("Here is the tree");
+        console.log(dataStr);
         var reg = new RegExp("\n", "g");
+        var reg2 = new RegExp(" ","g");
+        var reg3 = new RegExp("|","g");
         dataStr = dataStr.replace(reg, "<br/>");
+        dataStr = dataStr.replace(reg2,"&ensp;");
+        console.log(dataStr);
 
         panel.webview.html = getHtml(2, dataStr);
     });
     context.subscriptions.push(showTreeCmd);
 
     let lsTreeCmd = vscode.commands.registerCommand('case2script.lsTree', async () => {
-        // commandPool.sendCommand("showTree", "null");
         const panel = vscode.window.createWebviewPanel(
             'webPage',
             "Working On",
@@ -382,7 +380,7 @@ export async function activate(context: vscode.ExtensionContext) {
         let reg = new RegExp("\n", "g");
         let reg2 = new RegExp(" ", "g");
         dataStr = dataStr.replace(reg, "<br/>");
-        dataStr = dataStr.replace(reg2, "&nbsp&nbsp&nbsp&nbsp");
+        dataStr = dataStr.replace(reg2, "&ensp;");
 
         panel.webview.html = getHtml(2, dataStr);
     });

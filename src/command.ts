@@ -368,23 +368,23 @@ class Receiver {
     }
     //展示树
     public showTree() {
-        this.myBkTree.printTree();
+        return this.myBkTree.getPrintTreeStr();
     }
     //展示文件树
-    // public lsShowTree() {
-    //     return this.myBkTree.getLsTreeString();
-    // }
+    public lsShowTree() {
+        return this.myBkTree.getLsTreeString();
+    }
     //展示文件树
     public lsTree() {
-        return this.myFileTree.printlsTree();
+        return this.myFileTree.getPrintlsTree();
     }
     //阅读书签
     public readBookmark(title: string) {
         this.myBkTree.readBookmark(title);
     }
-    // public getData(): string {
-    //     return this.myBkTree.getFileFormatContent2();
-    // }
+    public getData(): string {
+        return this.myBkTree.getPrintTreeStr();
+    }
 }
 
 class CommandPool {
@@ -395,12 +395,12 @@ class CommandPool {
         this.invoker = new Invoker();
     };
 
-    // public getReceiver(): Receiver {
-    //     return this.receiver;
-    // }
-    // public getInvoker(): Invoker {
-    //     return this.invoker;
-    // }
+    public getReceiver(): Receiver {
+        return this.receiver;
+    }
+    public getInvoker(): Invoker {
+        return this.invoker;
+    }
     public sendCommand(thecmd: string, args: string): void {
         // 创建具体命令对象cmd并设定它的接受者
         // let cmd: Command = new ConcreteCommand(this.receiver);
@@ -450,12 +450,12 @@ class CommandPool {
         this.invoker.call(cmd);
     };
 
-    // public getData(): string {
-    //     return this.receiver.getData();
-    // }
-    // public getFileStructure(): string {
-    //     return this.receiver.lsTree();
-    // }
+    public getData(): string {
+        return this.receiver.getData();
+    }
+    public getFileStructure(): string {
+        return this.receiver.lsTree();
+    }
 }
 
 
@@ -521,4 +521,4 @@ function testCommand() {
     // cmp.sendCommand("save","null");
     // cmp.sendCommand("showTree","null");
 }
-testCommand();
+// testCommand();

@@ -9,7 +9,7 @@ class TreePrinter {
         this.tree = tree;
         this.record = [];
     }
-    printTree() {
+    public printTree() {
         let iterator = this.tree.getIterator("pre");
         while (iterator.hasNext()) {
             let tmpStr = "";
@@ -34,6 +34,34 @@ class TreePrinter {
 
             console.log(tmpStr);
         }
+    }
+    public getPrintTreeStr():string{
+        let retStr = "";
+        let iterator = this.tree.getIterator("pre");
+        while (iterator.hasNext()) {
+            let tmpStr = "";
+            let tmpArr = iterator.next();
+            let tmpNode = tmpArr[0];
+            let tmpDepth:number = tmpArr[1];
+            let tmpLast = tmpArr[2];
+            
+            this.record[tmpDepth] = tmpLast;
+            for (let i = 1; i < tmpDepth; i++) {
+                if (this.record[i] === false) {
+                    tmpStr += "|    ";
+                } else {
+                    tmpStr += "    ";
+                }
+            }
+            if (tmpLast === false) {
+                tmpStr += "├" + new BookmarkDecorator(tmpNode).getDecoratorStr();
+            } else {
+                tmpStr += "└" + new BookmarkDecorator(tmpNode).getDecoratorStr();
+            }
+
+            retStr += (tmpStr+"\n");
+        }
+        return retStr;
     }
 }
 
