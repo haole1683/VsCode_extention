@@ -112,7 +112,12 @@ class Bookmark implements Node {
         return;
     }
     public getStr(): string {
-        return `[${this.name}](${this.url})`;
+        // return `[${this.name}](${this.url})`;
+        if(this.readNum === 0){
+            return `[${this.name}](${this.url})`;
+        }else{
+            return `[*${this.name}[${this.readNum}]](${this.url})`; 
+        }
     }
 }
 

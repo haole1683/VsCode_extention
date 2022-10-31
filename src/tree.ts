@@ -278,9 +278,9 @@ class BookmarkTree implements Tree {
 
             if (tmpNode instanceof Catagory) {
                 retStr += this.getStrOfNSharp(tmpDepth);
-                retStr += (" " + tmpNode.getStr() + "\n");
+                retStr += (tmpNode.getStr() + "\n");
             } else {
-                retStr += (" " + tmpNode.getStr() + "\n");
+                retStr += (tmpNode.getStr() + "\n");
             }
         }
         return retStr;
@@ -386,12 +386,6 @@ class BookmarkTree implements Tree {
         if(node instanceof Bookmark) {
             node.addReadNum();
         }
-        // let num = this.bookmarkMap.get(title);
-        // if (num === undefined) {
-        //     this.bookmarkMap.set(title, 1);
-        // } else {
-        //     this.bookmarkMap.set(title, num + 1);
-        // }
     }
 
 

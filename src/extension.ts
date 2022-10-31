@@ -335,6 +335,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(redoCmd);
 
     let showTreeCmd = vscode.commands.registerCommand('case2script.showTree', async () => {
+        commandPool.sendCommand("showTree", "null");
         const panel = vscode.window.createWebviewPanel(
             'webPage',
             "Working On",
@@ -345,18 +346,14 @@ export async function activate(context: vscode.ExtensionContext) {
             {
                 enableScripts: true,
                 retainContextWhenHidden: true,
-                // preserveFocus:true,
             }
         );
-        let dataStr: string = commandPool.getData();
-        console.log("Here is the tree");
-        console.log(dataStr);
+        let dataStr: string = commandPool.getShowTreeStr();
         var reg = new RegExp("\n", "g");
         var reg2 = new RegExp(" ","g");
         var reg3 = new RegExp("|","g");
         dataStr = dataStr.replace(reg, "<br/>");
         dataStr = dataStr.replace(reg2,"&ensp;");
-        console.log(dataStr);
 
         panel.webview.html = getHtml(2, dataStr);
     });

@@ -1,5 +1,4 @@
 import { Node, Catagory, Bookmark, Folder, File } from "./node";
-import { Tree, BookmarkTree, FileTree } from "./tree";
 export { TreeIterator };
 
 interface Iterators {

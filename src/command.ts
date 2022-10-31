@@ -1,5 +1,4 @@
 export { CommandPool };
-import path = require("path");
 import { FactoryProducer } from "./Factory";
 import { Bookmark, Catagory, Node } from "./node";
 import { BookmarkTree, FileTree } from "./tree";
@@ -70,7 +69,7 @@ class AddTitleCommand implements Command {
     constructor(private receiver: Receiver, private args: string) {
         this.receiver = receiver;
         this.args = args;
-        this.name = "";
+        this.name = args;
     }
     ifUndo(): boolean {
         return true;
@@ -272,8 +271,6 @@ class ReadBookmarkCommand implements Command {
 class Receiver {
     private myBkTree: BookmarkTree;
     private myFileTree: FileTree;
-    // private fatherStack: Array<Catagory>;
-    // private urlStack: Array<string>;
     constructor() {
         let bkTreeFactoryProduct = new FactoryProducer().getBookmarkFactory();
         this.myBkTree = bkTreeFactoryProduct.getTree();
@@ -337,8 +334,8 @@ class Receiver {
     public readBookmark(title: string) {
         this.myBkTree.readBookmark(title);
     }
-    public getData(): string {
-        return this.myBkTree.getPrintTreeStr();
+    public getShowTreeStr(): string {
+        return this.myBkTree.getSaveContent();
     }
 }
 
@@ -358,7 +355,6 @@ class CommandPool {
     }
     public sendCommand(thecmd: string, args: string): void {
         // 创建具体命令对象cmd并设定它的接受者
-        // let cmd: Command = new ConcreteCommand(this.receiver);
         let cmd: Command = new EmptyCommand();
         switch (thecmd) {
             case "addTitle":
@@ -405,8 +401,8 @@ class CommandPool {
         this.invoker.call(cmd);
     };
 
-    public getData(): string {
-        return this.receiver.getData();
+    public getShowTreeStr(): string {
+        return this.receiver.getShowTreeStr();
     }
     public getFileStructure(): string {
         return this.receiver.lsTree();
