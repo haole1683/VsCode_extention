@@ -83,10 +83,8 @@ class AddTitleCommand implements Command {
             let devided = this.args.split("at");
             this.name = devided[0];
             let folder = devided[1];
-            // this.receiver.addFatherStack(folder);
             this.receiver.addTitle(this.name, folder);
         } else {
-            // this.receiver.addFatherStack("个人收藏");
             this.receiver.addTitle(this.args);
         }
     }
@@ -106,14 +104,9 @@ class DeleteTitleCommand implements Command {
         return true;
     }
     undo(): void {
-        // let father = this.receiver.getFatherStack().pop();
-        // if (father !== undefined) {
-        //     this.receiver.addTitle(this.title, father.getName());
-        // }
         this.receiver.addTitle(this.node, this.fatherName);
     }
     public execute() {
-        // this.receiver.addFatherStack(this.receiver.popFatherStack());
         this.fatherName = this.receiver.getFather(this.title);
         this.receiver.deleteTitle(this.title);
     }
@@ -159,13 +152,9 @@ class DeleteBookmarkCommand implements Command {
         return true;
     }
     undo(): void {
-        // let args: string = this.node.getName + "@" + this.node.getStr();
-        // args = args + "$" + this.fatherName;
         this.receiver.addBookmark(this.node.getName(), this.node.getUrl(), this.fatherName);
     }
     public execute() {
-        // this.receiver.addFatherStack(this.receiver.getBkTree().getFatherNodeKeyWord(this.title));
-        // this.receiver.addUrlStack(this.receiver.getBkTree().getBKUrl(this.title));
         this.fatherName = this.receiver.getFather(this.title);
         this.receiver.deleteBookmark(this.title);
     }
@@ -290,8 +279,6 @@ class Receiver {
         this.myBkTree = bkTreeFactoryProduct.getTree();
         let fileTreeFactoryProduct = new FactoryProducer().getFileFactory();
         this.myFileTree = fileTreeFactoryProduct.getTree();
-        // this.fatherStack = [];
-        // this.urlStack = [];
     };
     //获取父节点
     public getFather(name: string): string {
@@ -303,32 +290,6 @@ class Receiver {
         let node = this.myBkTree.findNode(name)[0];
         return node;
     }
-    // public getFatherStack(): Array<Catagory> {
-    //     return this.fatherStack;
-    // }
-    // public addFatherStack(keyword: string): void {
-    //     this.fatherStack.push(new Catagory(keyword));
-    // }
-    // public popFatherStack(): string {
-    //     let ca = this.fatherStack.pop();
-    //     if (ca !== undefined) {
-    //         return ca.getName();
-    //     }
-    //     return "";
-    // }
-    // public getBkTree(): BookmarkTree {
-    //     return this.myBkTree;
-    // }
-    // public addUrlStack(url: string): void {
-    //     this.urlStack.push(url);
-    // }
-    // public popUrlStack(): string {
-    //     let str = this.urlStack.pop();
-    //     if (str !== undefined) {
-    //         return str;
-    //     }
-    //     return "";
-    // }
     //添加书签目录
     public addTitle(title: string | Node, father?: string) {
         if (typeof title === 'string') {
@@ -343,12 +304,6 @@ class Receiver {
     }
     //添加书签目录
     public addBookmark(bkName: string, url: string, folder: string) {
-        // let devide = args.split("$");
-        // let folder: string = devide[1];
-        // let bmkPart: string = devide[0];
-        // let bmkArr: Array<string> = bmkPart.split('@');
-        // let url: string = bmkArr[1];
-        // let bkName: string = bmkArr[0];
         this.myBkTree.addNode(new Bookmark(bkName, url), folder);
     }
     //删除书签目录
