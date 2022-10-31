@@ -335,7 +335,8 @@ class Receiver {
         this.myBkTree.readBookmark(title);
     }
     public getShowTreeStr(): string {
-        return this.myBkTree.getSaveContent();
+        // return this.myBkTree.getSaveContent();  // 文件存储格式
+        return this.myBkTree.getPrintTreeStr();
     }
 }
 

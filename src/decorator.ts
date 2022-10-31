@@ -1,4 +1,4 @@
-import { Bookmark, Node } from "./node";
+import { Node } from "./node";
 export { BookmarkDecorator };
 
 abstract class NodeDecorator {
@@ -15,9 +15,6 @@ abstract class NodeDecorator {
 class BookmarkDecorator extends NodeDecorator {
     public getDecoratorStr(): string {
         let str:string = super.getStr();
-        if (this.node instanceof Bookmark) {
-            if (this.node.getReadNum()) { str += "*"; }
-        }
         return str;
     }
 }
