@@ -469,4 +469,4 @@ function testCommand() {
     // cmp.sendCommand("save","null");
     // cmp.sendCommand("showTree","null");
 }
-testCommand();
+// testCommand();

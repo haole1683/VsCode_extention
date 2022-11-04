@@ -1,6 +1,5 @@
 import * as  fs from "fs";
 import * as  path from "path";
-import assert = require("assert");
 import { FileOperation } from "./fileOps";
 import { Node, Catagory, Bookmark, Folder, File } from "./node";
 import { TreeIterator } from "./Iterator";
@@ -24,8 +23,10 @@ class BookmarkTree implements Tree {
     constructor() {
         this.root = new Catagory("个人收藏");
         this.bookmarkMap = new Map<string, number>;
-        // this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk";
-        this.path = "/Users/leizhe/code/lab/VsCode_extention/files/1.bmk";
+        
+        const dirPath = path.resolve(__dirname, '../files/1.bmk');
+        this.path = dirPath;
+        console.log(this.path);
         this.read(this.path);
     };
 
