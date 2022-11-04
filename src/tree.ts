@@ -24,8 +24,8 @@ class BookmarkTree implements Tree {
     constructor() {
         this.root = new Catagory("个人收藏");
         this.bookmarkMap = new Map<string, number>;
-        // this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk";
-        this.path = "/Users/leizhe/code/lab/VsCode_extention/files/1.bmk";
+        this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk";
+        // this.path = "/Users/leizhe/code/lab/VsCode_extention/files/1.bmk";
         this.read(this.path);
     };
 
@@ -282,8 +282,8 @@ class FileTree implements Tree {
     constructor(path?: string) {
         this.root = new Folder("base");
         if (path === undefined) {
-            // this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files";
-            this.path = "/Users/leizhe/code/lab/VsCode_extention/files";
+            this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files";
+            // this.path = "/Users/leizhe/code/lab/VsCode_extention/files";
         } else {
             this.path = path;
         }
@@ -381,8 +381,8 @@ class FileTree implements Tree {
      */
     private getPathAndName(path: string): Array<string> {
         let filePath: string = path;
-        // let devidedStr: Array<string> = filePath.split("\\");
-        let devidedStr: Array<string> = filePath.split("/");
+        let devidedStr: Array<string> = filePath.split("\\");
+        // let devidedStr: Array<string> = filePath.split("/");
         let fileName: string = devidedStr[devidedStr.length - 1];
         let fileDir = filePath.substring(0, filePath.length - fileName.length - 1);
         return [fileDir, fileName];
