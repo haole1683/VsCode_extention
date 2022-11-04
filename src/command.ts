@@ -418,32 +418,32 @@ function testCommand() {
     let cmp: CommandPool = new CommandPool();
     console.log("*********************************");
 
-    cmp.sendCommand("addTitle", "嗷嗷");
-    cmp.sendCommand("addTitle", "bbat嗷嗷");
-    cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("undo", "null");
-    cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("undo", "null");
-    cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("addBookmark", "aa@www.baidu.com$面向对象");
-    cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("undo", "null");
-    cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("addTitle", "嗷嗷");
+    // cmp.sendCommand("addTitle", "bbat嗷嗷");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("undo", "null");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("undo", "null");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("addBookmark", "aa@www.baidu.com$面向对象");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("undo", "null");
+    // cmp.sendCommand("showTree", "null");
     cmp.sendCommand("readBookmark", "elearning");
     cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("deleteTitle", "面向对象");
-    cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("undo", "null");
-    cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("redo", "null");
-    cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("readBookmark", "elearning");
-    cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("open", "/Users/leizhe/code/lab/VsCode_extention/files/2.bmk");
-    cmp.sendCommand("showTree", "null");
-    cmp.sendCommand("addTitle", "嗷嗷");
-    cmp.sendCommand("save", "null");
-    cmp.sendCommand("lsTree", "null");
+    // cmp.sendCommand("deleteTitle", "面向对象");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("undo", "null");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("redo", "null");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("readBookmark", "elearning");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("open", "/Users/leizhe/code/lab/VsCode_extention/files/2.bmk");
+    // cmp.sendCommand("showTree", "null");
+    // cmp.sendCommand("addTitle", "嗷嗷");
+    // cmp.sendCommand("save", "null");
+    // cmp.sendCommand("lsTree", "null");
 
 
 
@@ -475,4 +475,4 @@ function testCommand() {
     // cmp.sendCommand("save","null");
     // cmp.sendCommand("showTree","null");
 }
-// testCommand();
+testCommand();

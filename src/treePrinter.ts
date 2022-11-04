@@ -1,4 +1,4 @@
-import { BookmarkDecorator } from "./decorator";
+import { BookmarkDecorator1, BookmarkDecorator2 } from "./decorator";
 import { BookmarkTree, Tree } from "./tree";
 export { TreePrinter };
 
@@ -29,9 +29,9 @@ class TreePrinter {
                 }
             }
             if (tmpLast === false) {
-                tmpStr += "├" + new BookmarkDecorator(tmpNode).getDecoratorStr();
+                tmpStr += "├" + new BookmarkDecorator2(tmpNode).getDecoratorStr();
             } else {
-                tmpStr += "└" + new BookmarkDecorator(tmpNode).getDecoratorStr();
+                tmpStr += "└" + new BookmarkDecorator2(tmpNode).getDecoratorStr();
             }
 
             console.log(tmpStr);
@@ -56,9 +56,9 @@ class TreePrinter {
                 }
             }
             if (tmpLast === false) {
-                tmpStr += "├" + new BookmarkDecorator(tmpNode).getDecoratorStr();
+                tmpStr += "├" + new BookmarkDecorator2(tmpNode).getDecoratorStr();
             } else {
-                tmpStr += "└" + new BookmarkDecorator(tmpNode).getDecoratorStr();
+                tmpStr += "└" + new BookmarkDecorator2(tmpNode).getDecoratorStr();
             }
 
             retStr += (tmpStr+"\n");
