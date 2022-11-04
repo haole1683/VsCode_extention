@@ -1,14 +1,11 @@
 import * as  fs from "fs";
 import * as  path from "path";
 import assert = require("assert");
-// import { AdapterFromTreeToFile, TargetTree } from "./adapter";
 import { FileOperation } from "./fileOps";
 import { Node, Catagory, Bookmark, Folder, File } from "./node";
 import { TreeIterator } from "./Iterator";
 import { TreePrinter } from "./treePrinter";
 export { Tree, BookmarkTree, FileTree };
-
-
 
 interface Tree {
     getRoot(): Node;
@@ -27,11 +24,10 @@ class BookmarkTree implements Tree {
     constructor() {
         this.root = new Catagory("个人收藏");
         this.bookmarkMap = new Map<string, number>;
-        this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk";
-        // this.path = "/Users/leizhe/code/lab/VsCode_extention/files/1.bmk";
+        // this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk";
+        this.path = "/Users/leizhe/code/lab/VsCode_extention/files/1.bmk";
         this.read(this.path);
     };
-
 
     // 树基本属性get set
     public getRoot(): Node {
@@ -56,20 +52,6 @@ class BookmarkTree implements Tree {
     public findNode(keyword: string): Array<Node> {
         let res: Array<Node> = [];
         let treeLevelIterator = new TreeIterator(this.root, "level");
-        // let myQueue: Array<Node> = [];
-        // myQueue.push(this.root);
-        // while (myQueue.length > 0) {
-        //     let curNode = myQueue.shift();
-        //     if (curNode !== undefined) {
-        //         let curName = curNode.getName();
-        //         if (curName === keyword) {
-        //             res.push(curNode);
-        //         }
-        //     }
-        //     curNode?.getChildren().forEach(function (son) {
-        //         myQueue.push(son);
-        //     });
-        // }
         while (treeLevelIterator.hasNext()) {
             let tmpNode = treeLevelIterator.next()[0];
             if (tmpNode.getName() === keyword) {
@@ -101,22 +83,6 @@ class BookmarkTree implements Tree {
                 });
             }
         }
-        // while (myQueue.length > 0) {
-        //     let curNode = myQueue.shift();
-
-        //     if (curNode !== undefined) {
-        //         curNode.getChildren().forEach(function (son) {
-        //             if (son !== undefined) {
-        //                 if (son.getName() === keyword && curNode !== undefined) {
-        //                     fahterArr.push(curNode);
-        //                 }
-        //             }
-        //         });
-        //     }
-        //     curNode?.getChildren().forEach(function (son) {
-        //         myQueue.push(son);
-        //     });
-        // }
         return fahterArr;
     }
     /**
@@ -161,7 +127,6 @@ class BookmarkTree implements Tree {
         });
     }
 
-
     // 字符串基本处理
     /**
      * 获取k个#的字符串
@@ -192,81 +157,6 @@ class BookmarkTree implements Tree {
         return i;
     }
 
-
-    // 获取树格式化字符串相关
-    /**递归辅助函数 */
-    private getArrayOfTreeWIthRecrusion(curNode: Node, curDepth: number, myNodearr: Array<Node>, myStrArr: Array<string>, myDepthArr: Array<number>): void {
-        if (curNode !== null) {
-            if (curNode instanceof Catagory) {
-                myNodearr.push(curNode);
-                myStrArr.push(curNode.getName());
-                myDepthArr.push(curDepth);
-            } else {
-                myNodearr.push(curNode);
-                myStrArr.push(curNode.getName() + "|" + curNode.getUrl());
-                myDepthArr.push(-1); // 代表是书签
-            }
-            let sonArray: Array<Node> = curNode.getChildren();
-            sonArray = sonArray.sort(function (a: Node, b: Node): number {
-                if ((a instanceof Bookmark && b instanceof Bookmark) || (a instanceof Catagory && b instanceof Catagory)) {
-                    return 0;
-                } else {
-                    if (a instanceof Bookmark) {
-                        return -1;
-                    } else {
-                        return 1;
-                    }
-                }
-            });
-            sonArray.forEach((son) => {
-                this.getArrayOfTreeWIthRecrusion(son, curDepth + 1, myNodearr, myStrArr, myDepthArr);
-            });
-        }
-    }
-    /**获取整棵树各节点数据 */
-    private getArrayOfTree(): { nodeArr: Array<Node>, strArr: Array<string>, depthArr: Array<number> } {
-        // 获取对应存储bmk每行数据
-        let myNodeArr: Array<Node> = [];
-        let myStrArr: Array<string> = [];
-        let myDepthArr: Array<number> = [];
-        this.getArrayOfTreeWIthRecrusion(this.root, 1, myNodeArr, myStrArr, myDepthArr);
-        return { nodeArr: myNodeArr, strArr: myStrArr, depthArr: myDepthArr };
-    }
-    /**
-     * 格式化读取树
-     * @returns 读取树字符串
-     */
-    public getFileFormatContent(): string {
-        // 获取 bmk文件存储格式字符串
-        let depth = 1;
-
-        let allArr: { nodeArr: Array<Node>, strArr: Array<string>, depthArr: Array<number> } = this.getArrayOfTree();
-        let myNodeArr: Array<Node> = allArr.nodeArr;
-        let myStrArr: Array<string> = allArr.strArr;
-        let myDepthArr: Array<number> = allArr.depthArr;
-        let myPrintArray: Array<string> = [];
-        assert(myStrArr.length === myStrArr.length);
-
-        for (let i = 0; i < myStrArr.length; i++) {
-            if (myDepthArr[i] === -1) {
-                // 叶结点  书签结点
-                let devidedStr = myStrArr[i].split("|");
-                let bkName = devidedStr[0];
-                let bkUrl = devidedStr[1];
-                myPrintArray.push(`[${bkName}](${bkUrl})`);
-            } else {
-                let depth = myDepthArr[i];
-                let strSharp = this.getStrOfNSharp(depth);
-                myPrintArray.push(`${strSharp} ${myStrArr[i]}`);
-            }
-        }
-        let retStr: string = "";
-        myPrintArray.forEach(function (str) {
-            retStr += (str + "\n");
-        });
-        return retStr;
-    }
-
     //获取待保存内容
     public getSaveContent(): string {
         let retStr: string = "";
@@ -274,10 +164,10 @@ class BookmarkTree implements Tree {
         while (treePreIterator.hasNext()) {
             let tmpArr = treePreIterator.next();
             let tmpNode = tmpArr[0];
-            let tmpDepth:number = tmpArr[1];
+            let tmpDepth: number = tmpArr[1];
 
             if (tmpNode instanceof Catagory) {
-                retStr += this.getStrOfNSharp(tmpDepth);
+                retStr += this.getStrOfNSharp(tmpDepth) + " ";
                 retStr += (tmpNode.getStr() + "\n");
             } else {
                 retStr += (tmpNode.getStr() + "\n");
@@ -285,6 +175,7 @@ class BookmarkTree implements Tree {
         }
         return retStr;
     }
+
     /**
      * 打印树结构，用于调试
      */
@@ -292,89 +183,11 @@ class BookmarkTree implements Tree {
         let treePrinter = new TreePrinter(this);
         treePrinter.printTree();
     }
-    public getPrintTreeStr():string{
+    public getPrintTreeStr(): string {
         let treePrinter = new TreePrinter(this);
         treePrinter.printTree();
         return treePrinter.getPrintTreeStr();
     }
-    /**
-     * 获取文件格式内容字符串，带有读取次数信息
-     * @returns 对应字符串
-     */
-    public getFileFormatContent2(): string {
-        let depth = 1;
-
-        let allArr: { nodeArr: Array<Node>, strArr: Array<string>, depthArr: Array<number> } = this.getArrayOfTree();
-        let myNodeArr: Array<Node> = allArr.nodeArr;
-        let myStrArr: Array<string> = allArr.strArr;
-        let myDepthArr: Array<number> = allArr.depthArr;
-        let myPrintArray: Array<string> = [];
-        assert(myStrArr.length === myStrArr.length);
-
-        for (let i = 0; i < myStrArr.length; i++) {
-            if (myDepthArr[i] === -1) {
-                // 叶结点  书签结点
-                let devidedStr = myStrArr[i].split("|");
-                let bkName = devidedStr[0];
-                let bkUrl = devidedStr[1];
-                let num = this.bookmarkMap.get(bkName);
-                if (num === undefined) {
-                    myPrintArray.push(`[${bkName}](${bkUrl})`);
-                } else {
-                    myPrintArray.push(`[*${bkName}[${num}]](${bkUrl})`);
-                }
-
-            } else {
-                let depth = myDepthArr[i];
-                let strSharp = this.getStrOfNSharp(depth);
-                myPrintArray.push(`${strSharp} ${myStrArr[i]}`);
-            }
-        }
-        let retStr: string = "";
-        myPrintArray.forEach(function (str) {
-            retStr += (str + "\n");
-        });
-        return retStr;
-    }
-    private lsTreeHelper(node: Node, level: number, printString: Array<string>): void {
-        let fName = node.getName();
-        if (level === 0) {
-            printString.push(fName);
-        } else {
-            let strPrint: string = "";
-            for (let i = 0; i < level; i++) {
-                strPrint += "---";
-            }
-            printString.push(strPrint + "--├" + fName);
-        }
-        let nodeArr: Array<Node> = node.getChildren();
-        for (let i = 0; i < nodeArr.length; i++) {
-            this.lsTreeHelper(nodeArr[i], level + 1, printString);
-        }
-
-
-    }
-    /**
-     * 获取打印字符串
-     * @returns 字符串
-     */
-    private lsTreeString(): string {
-        let printString: Array<string> = [];
-        this.lsTreeHelper(this.root, 0, printString);
-        let retStr: string = "";
-        printString.forEach(function (str) {
-            retStr += (str + "\n");
-        });
-        return retStr;
-    }
-    /**
-     * 获取树形打印输出
-     * @returns 字符串
-     */
-    public getLsTreeString(): string {
-        return this.lsTreeString();
-    }
-
 
     // Bookmark读取
     /**
@@ -383,11 +196,10 @@ class BookmarkTree implements Tree {
      */
     public readBookmark(title: string) {
         let node = this.findNode(title)[0];
-        if(node instanceof Bookmark) {
+        if (node instanceof Bookmark) {
             node.addReadNum();
         }
     }
-
 
     // 文件导入以及写出
     /**
@@ -400,7 +212,6 @@ class BookmarkTree implements Tree {
         this.clear();
         if (path === undefined) {
             this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk";
-            // myTree = new AdapterFromTreeToFile(new FileOperation(this.path));;
             fileOperation = new FileOperation(this.path);
         } else {
             console.log("You are loading from " + path);
@@ -439,23 +250,21 @@ class BookmarkTree implements Tree {
             }
         });
     }
+
     /**
      * 将内存中树存储path中
      */
     public save(): void {
         let fileOperation = new FileOperation(this.path);
-        // const myTree: TargetTree = new AdapterFromTreeToFile(new FileOperation(this.path));
         let str: string = this.getSaveContent();
         fileOperation.writeContent(str);
     }
-
 
     // 迭代器
     public getIterator(method: string): TreeIterator {
         if (method === "level") { return new TreeIterator(this.root, "level"); }
         else { return new TreeIterator(this.root, "pre"); }
     }
-
 
     /**
      * 清除内存中树
@@ -473,8 +282,8 @@ class FileTree implements Tree {
     constructor(path?: string) {
         this.root = new Folder("base");
         if (path === undefined) {
-            this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files";
-            // this.path = "/Users/leizhe/code/lab/VsCode_extention/files";
+            // this.path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files";
+            this.path = "/Users/leizhe/code/lab/VsCode_extention/files";
         } else {
             this.path = path;
         }
@@ -496,30 +305,15 @@ class FileTree implements Tree {
         this.path = path;
     }
 
-
     // 结点基本处理
     /**
      * 找到关键字为keyword的结点
      * @param {string} keyword: 关键字keyword
      * @return 关键字结点的数组
      */
-     public findNode(keyword: string): Array<Node> {
+    public findNode(keyword: string): Array<Node> {
         let res: Array<Node> = [];
         let treeLevelIterator = new TreeIterator(this.root, "level");
-        // let myQueue: Array<Node> = [];
-        // myQueue.push(this.root);
-        // while (myQueue.length > 0) {
-        //     let curNode = myQueue.shift();
-        //     if (curNode !== undefined) {
-        //         let curName = curNode.getName();
-        //         if (curName === keyword) {
-        //             res.push(curNode);
-        //         }
-        //     }
-        //     curNode?.getChildren().forEach(function (son) {
-        //         myQueue.push(son);
-        //     });
-        // }
         while (treeLevelIterator.hasNext()) {
             let tmpNode = treeLevelIterator.next()[0];
             if (tmpNode.getName() === keyword) {
@@ -535,10 +329,8 @@ class FileTree implements Tree {
      * @param keyword 结点关键字
      * @returns 该节点父亲
      */
-     public findFatherNode(keyword: string): Array<Node> {
-        // let myQueue: Array<Node> = [];
+    public findFatherNode(keyword: string): Array<Node> {
         let fahterArr: Array<Node> = [];
-        // myQueue.push(this.root);
         let treeLevelIterator = new TreeIterator(this.root, "level");
         while (treeLevelIterator.hasNext()) {
             let tmpNode = treeLevelIterator.next()[0];
@@ -552,22 +344,6 @@ class FileTree implements Tree {
                 });
             }
         }
-        // while (myQueue.length > 0) {
-        //     let curNode = myQueue.shift();
-
-        //     if (curNode !== undefined) {
-        //         curNode.getChildren().forEach(function (son) {
-        //             if (son !== undefined) {
-        //                 if (son.getName() === keyword && curNode !== undefined) {
-        //                     fahterArr.push(curNode);
-        //                 }
-        //             }
-        //         });
-        //     }
-        //     curNode?.getChildren().forEach(function (son) {
-        //         myQueue.push(son);
-        //     });
-        // }
         return fahterArr;
     }
 
@@ -609,7 +385,6 @@ class FileTree implements Tree {
         let devidedStr: Array<string> = filePath.split("/");
         let fileName: string = devidedStr[devidedStr.length - 1];
         let fileDir = filePath.substring(0, filePath.length - fileName.length - 1);
-        // console.log(fileDir);
         return [fileDir, fileName];
     }
     private readHelper(father: Node, fpath: string): void {
@@ -683,7 +458,7 @@ class FileTree implements Tree {
         treePrinter.printTree();
     }
 
-    public getPrintlsTree(): string{
+    public getPrintlsTree(): string {
         let treePrinter = new TreePrinter(this);
         return treePrinter.getPrintTreeStr();
     }
@@ -699,27 +474,4 @@ class FileTree implements Tree {
     public clear(): void {
         this.root.setChildren(new Array<Node>);
     }
-
-
 }
-
-
-
-
-// 测试
-function testBookMarkTree() {
-    let myTree: BookmarkTree = new BookmarkTree();
-    myTree.read("C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\1.bmk");
-    myTree.printTree();
-    myTree.addNode(new Catagory("傻逼"));
-    myTree.printTree();
-    myTree.deleteNode(new Catagory("傻逼"));
-    myTree.printTree();
-}
-function testFileTree() {
-    let path = "C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files";
-    let myTree: FileTree = new FileTree(path);
-    myTree.printlsTree();
-}
-
-// testFileTree();

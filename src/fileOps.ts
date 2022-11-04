@@ -146,20 +146,3 @@ class FileOperation{
         fs.rmdirSync(this.totalPath);
     }
 }
-
-
-// function test(){
-//     let myops = new FileOperation("files/tmp.bmk");
-//     // let mystr:string = "asdfjsafsao";
-//     // myops.writeContent(mystr);
-    
-//     let readStr:string = myops.readContent();
-//     myops.writeContentAppend("\nhello");
-//     console.log(readStr);
-// }
-
-// test();
-
-
-// const dirPath = path.resolve("files","tmp.bmk");
-// console.log(dirPath);

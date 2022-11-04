@@ -2,6 +2,8 @@ import { BookmarkDecorator } from "./decorator";
 import { BookmarkTree, Tree } from "./tree";
 export { TreePrinter };
 
+//打印树
+
 class TreePrinter {
     private tree: Tree;
     private record: Array<boolean>;
@@ -64,11 +66,3 @@ class TreePrinter {
         return retStr;
     }
 }
-
-function testTreePrinter(){
-    let myTree = new BookmarkTree();
-    let treePrinter = new TreePrinter(myTree);
-    treePrinter.printTree();
-}
-
-// testTreePrinter();

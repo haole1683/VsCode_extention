@@ -1,7 +1,6 @@
 export { Node, Catagory, Bookmark, Folder, File };
 
 interface Node {
-
     getName(): string;
     setName(name: string): void;
 
@@ -18,19 +17,16 @@ interface Node {
 class Catagory implements Node {
     private name: string; // 目录（书签）名称额
     private children: Array<Node>;   // 儿子结点 
-
     constructor(name: string) {
         this.name = name;
         this.children = Array<Node>();
     }
-
     public getName(): string {
         return this.name;
     }
     public setName(name: string): void {
         this.name = name;
     }
-
     public addChild(son: Node): void {
         this.children.push(son);
     }
@@ -53,11 +49,9 @@ class Catagory implements Node {
     public setChildren(children: Array<Node>): void {
         this.children = children;
     }
-
     public getStr(): string {
         return this.name;
     }
-
     public getUrl(): string {
         return "";
     }
@@ -67,13 +61,11 @@ class Bookmark implements Node {
     private name: string; // 目录（书签）名称额
     private readNum: number;
     private url: string;
-
     constructor(name: string, url: string) {
         this.name = name;
         this.readNum = 0;
         this.url = url;
     }
-
     // 基本属性set get
     public getName(): string {
         return this.name;
@@ -97,7 +89,6 @@ class Bookmark implements Node {
     public getUrl(): string {
         return this.url;
     }
-
     // 孩子结点处理
     public addChild(son: Node): void {
         return;
@@ -112,16 +103,9 @@ class Bookmark implements Node {
         return;
     }
     public getStr(): string {
-        // return `[${this.name}](${this.url})`;
-        if(this.readNum === 0){
-            return `[${this.name}](${this.url})`;
-        }else{
-            return `[*${this.name}[${this.readNum}]](${this.url})`; 
-        }
+        return `[${this.name}](${this.url})`;
     }
 }
-
-
 
 class Folder implements Node {
     private name: string; // 目录（书签）名称额
@@ -196,11 +180,3 @@ class File implements Node {
         return "";
     }
 }
-
-
-function testNode() {
-    let myNode: Node = new Bookmark("11", "111");
-    console.log(myNode instanceof Folder);
-
-}
-testNode();

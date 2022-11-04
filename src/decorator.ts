@@ -1,5 +1,7 @@
-import { Node } from "./node";
+import { Bookmark, Node } from "./node";
 export { BookmarkDecorator };
+
+//装饰器模式
 
 abstract class NodeDecorator {
     protected node: Node;
@@ -15,6 +17,9 @@ abstract class NodeDecorator {
 class BookmarkDecorator extends NodeDecorator {
     public getDecoratorStr(): string {
         let str:string = super.getStr();
+        if (this.node instanceof Bookmark) {
+            if (this.node.getReadNum()) { str = "*" + str; }
+        }
         return str;
     }
 }

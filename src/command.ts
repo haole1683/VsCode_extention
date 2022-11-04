@@ -323,10 +323,6 @@ class Receiver {
         return this.myBkTree.getPrintTreeStr();
     }
     //展示文件树
-    public lsShowTree() {
-        return this.myBkTree.getLsTreeString();
-    }
-    //展示文件树
     public lsTree() {
         return this.myFileTree.getPrintlsTree();
     }
@@ -473,4 +469,4 @@ function testCommand() {
     // cmp.sendCommand("save","null");
     // cmp.sendCommand("showTree","null");
 }
-// testCommand();
+testCommand();

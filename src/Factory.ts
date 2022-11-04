@@ -2,10 +2,13 @@ import { Bookmark, Catagory, File, Folder, Node } from "./node";
 import { Tree, BookmarkTree, FileTree } from "./tree";
 export { BookmarkTreeFactory, FileTreeFactory,FactoryProducer};
 
+//抽象工厂模式
+
 interface AbstractFactory {
     getTree(path?:string): Tree;
     getNode(nodeType: string, name: string): Node;
 }
+
 class FactoryProducer {
     public getBookmarkFactory() {return new BookmarkTreeFactory;}
     public getFileFactory() { return new FileTreeFactory;    }
@@ -36,18 +39,3 @@ class FileTreeFactory implements AbstractFactory {
         else { return new Folder(name); }
     }
 }
-
-
-function testFactory(){
-    let factoryproducer = new FactoryProducer();
-    let bookmarkFactory = factoryproducer.getBookmarkFactory();
-    let myTree:BookmarkTree = bookmarkFactory.getTree();
-    let myNode = bookmarkFactory.getNode("Bookmark", "bbb");
-    if(myNode !== undefined){
-        myTree.addNode(myNode);
-        myTree.printTree();
-    }
-    
-}
-
-// testFactory();
