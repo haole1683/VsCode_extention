@@ -17,9 +17,20 @@
 
 ## **二、演示demo，没弄完**
 
-
+### All：
 ![demo.gif](/demo/demo.gif)
-
+### Add Delete
+![add_delete_ops.gif](/demo/add_delete_ops.gif)
+### Open Save
+![open and save.gif](/demo/open and save.gif)
+### readBookmark
+![readBookmark.gif](/demo/readBookmark.gif)
+### sideBar
+![sidebar.gif](/demo/sidebar.gif)
+### Undo Redo
+![undo_redo_ops.gif](/demo/undo_redo_ops.gif)
+### showTree lsTree
+![showTree_lsTree.gif](/demo/showTree_lsTree.gif)
 
 ## **三、文档**
 
