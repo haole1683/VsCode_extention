@@ -334,6 +334,9 @@ class Receiver {
         // return this.myBkTree.getSaveContent();  // 文件存储格式
         return this.myBkTree.getPrintTreeStr();
     }
+    public getSaveContent(): string {
+        return this.myBkTree.getSaveContent();
+    }
 }
 
 class CommandPool {
@@ -404,6 +407,9 @@ class CommandPool {
     public getFileStructure(): string {
         return this.receiver.lsTree();
     }
+    public getSaveContent(): string {
+        return this.receiver.getSaveContent();
+    }
 }
 
 
@@ -465,8 +471,8 @@ function testCommand() {
     // cmp.sendCommand("open","C:\\Users\\29971\\Desktop\\Learning\\VSCode_extension\\Project\\case2script\\files\\2.bmk");
     // cmp.sendCommand("showTree","null");
     // cmp.sendCommand("addTitle","嗷嗷");
-    // cmp.sendCommand("showTree","null");
+    // cmp.sendCommand("shofwTree","null");
     // cmp.sendCommand("save","null");
     // cmp.sendCommand("showTree","null");
 }
-testCommand();
+// testCommand();
