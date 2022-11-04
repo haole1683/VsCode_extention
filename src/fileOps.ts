@@ -4,7 +4,6 @@ import * as path from "path";
 export {FileOperation};
 
 // About file operations
-// https://blog.csdn.net/m0_46612221/article/details/122870551?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-122870551-blog-103111639.pc_relevant_3mothn_strategy_recovery&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-122870551-blog-103111639.pc_relevant_3mothn_strategy_recovery&utm_relevant_index=1
 
 class FileOperation{
     totalPath: string;
@@ -12,9 +11,7 @@ class FileOperation{
         this.totalPath = filePath;
         this.checkFileExist();
     };
-    filePath = "./files";
-    fileName = "tmp.bmk";
-    
+
     lsTreeGetPathAndName(path:string):Array<string>{
         let filePath:string = path;
         let devidedStr:Array<string> = filePath.split("\\");
