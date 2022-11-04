@@ -12,6 +12,7 @@
 #### 4.prezatation?
 #### 5.页面显示有bug，部分网页无法显示 
 
+#### UML图：https://www.processon.com/diagraming/6358f3610791296c855e642f
 
 ## **二、演示demo，没弄完**
 
